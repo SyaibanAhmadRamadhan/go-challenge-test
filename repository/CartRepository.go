@@ -18,4 +18,5 @@ type TCart struct {
 }
 
 type CartRepository interface {
+	UnitOfWorkRepository
 }

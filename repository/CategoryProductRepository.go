@@ -7,4 +7,5 @@ type CategoryProduct struct {
 }
 
 type CategoryProductRepository interface {
+	UnitOfWorkRepository
 }

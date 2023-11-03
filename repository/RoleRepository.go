@@ -7,4 +7,5 @@ type Role struct {
 }
 
 type RoleRepository interface {
+	UnitOfWorkRepository
 }

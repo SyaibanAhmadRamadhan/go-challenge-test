@@ -22,4 +22,5 @@ type UserRepository interface {
 	FindOne(ctx context.Context, filters *[]Filter) (user *User, err error)
 	FindAll(ctx context.Context, filters *[]Filter, paginate Pagination) (users *[]User, total int, err error)
 	Search(ctx context.Context, search SearchParam) (users *[]User, total int, err error)
+	UnitOfWorkRepository
 }
