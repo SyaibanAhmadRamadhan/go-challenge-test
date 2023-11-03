@@ -1,9 +1,14 @@
 -- +goose Up
 -- +goose StatementBegin
-SELECT 'up SQL query';
+CREATE TABLE m_role
+(
+    id          SERIAL primary key,
+    name        VARCHAR(25),
+    description VARCHAR(255) NULL
+);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-SELECT 'down SQL query';
+DROP TABLE IF EXISTS m_role;
 -- +goose StatementEnd
