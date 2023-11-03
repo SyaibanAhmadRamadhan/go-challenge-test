@@ -1,3 +1,6 @@
+integration-test:
+	go test -v ./test/integration
+
 migrate:
 	go run main.go migrate
 

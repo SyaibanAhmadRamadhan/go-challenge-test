@@ -37,7 +37,6 @@ func (u *UserRepositoryImpl) FindOne(ctx context.Context, filters *[]repository.
 									FROM m_user WHERE %s AND deleted_at IS NULL LIMIT 1`,
 		repository.AuditToQuery(""), filterStr)
 
-	log.Info().Msgf("%v", values)
 	tx, err := u.GetTx()
 	if err != nil {
 		return
