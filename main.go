@@ -24,7 +24,7 @@ func main() {
 	pgConf := conf.EnvPostgresConf()
 
 	if args[1] == "migrate" {
-		infra.MigrateMaster()
+		infra.MigrateMaster("", "", "")
 		return
 	}
 

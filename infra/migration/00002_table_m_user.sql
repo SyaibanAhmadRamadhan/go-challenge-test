@@ -7,7 +7,7 @@ CREATE TABLE m_user
     username     VARCHAR(50),
     email        VARCHAR(100),
     password     VARCHAR(255),
-    phone_number VARCHAR(12),
+    phone_number VARCHAR(15),
     created_at   DECIMAL,
     created_by   VARCHAR(50),
     updated_at   DECIMAL,

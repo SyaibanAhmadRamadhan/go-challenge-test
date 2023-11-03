@@ -1,10 +1,24 @@
 package unit
 
 import (
+	"fmt"
 	"testing"
 
 	"challenge-test-synapsis/repository"
 )
+
+func testVal(str ...any) {
+	for i := 0; i < len(str); i++ {
+		fmt.Println(str[i])
+	}
+}
+
+func TestAudit(t *testing.T) {
+	user := repository.User{}
+	str := fmt.Sprintf(`SELECT id, role_id, username, email, password, phone_number, %s
+	FROM m_user WHERE LIMIT 1`, user.Audit.ToQuery(""))
+	t.Log(str)
+}
 
 func TestSpesificColumnToString(t *testing.T) {
 	SpesificColumns := &[]repository.Filter{
@@ -24,7 +38,10 @@ func TestSpesificColumnToString(t *testing.T) {
 		},
 	}
 
-	t.Log(repository.GenerateFilters(SpesificColumns))
+	filterStr, values := repository.GenerateFilters(SpesificColumns)
+	res := fmt.Sprintf("SELECT id FROM m_user WHERE %s LIMIT 1", filterStr)
+	t.Log(res)
+	testVal(values...)
 }
 
 func TestPagination_OrderBy(t *testing.T) {

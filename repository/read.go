@@ -55,7 +55,7 @@ func (p *Pagination) GenerateOrderBy() (str string) {
 	return
 }
 
-func GenerateFilters(filters *[]Filter) (str string, values []string) {
+func GenerateFilters(filters *[]Filter) (str string, values []any) {
 	if filters != nil {
 		latest := (*filters)[len(*filters)-1]
 		for i, filter := range *filters {

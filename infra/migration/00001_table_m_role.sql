@@ -6,6 +6,9 @@ CREATE TABLE m_role
     name        VARCHAR(25),
     description VARCHAR(255) NULL
 );
+
+INSERT INTO m_role (id, name, description)
+VALUES (1, 'member', 'desc')
 -- +goose StatementEnd
 
 -- +goose Down

@@ -11,5 +11,5 @@ type Session struct {
 }
 
 type SessionRepository interface {
-	UnitOfWorkRepository
+	UOWRepository
 }

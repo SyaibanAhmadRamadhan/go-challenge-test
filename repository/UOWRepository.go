@@ -2,18 +2,22 @@ package repository
 
 import (
 	"context"
-	"database/sql"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type UnitOfWorkRepository interface {
-	StartTx(ctx context.Context, opts *sql.TxOptions, fn func() error) error
-	GetTx() (*sql.Tx, error)
-	GetDB() (*sql.DB, error)
+type UOWRepository interface {
+	StartTx(ctx context.Context, opts pgx.TxOptions, fn func() error) error
+	GetTx() (pgx.Tx, error)
+	GetDB() (*pgxpool.Pool, error)
 }
 
-func LevelReadCommitted() *sql.TxOptions {
-	return &sql.TxOptions{
-		Isolation: sql.LevelReadCommitted,
-		ReadOnly:  false,
+func LevelReadCommitted() pgx.TxOptions {
+	return pgx.TxOptions{
+		IsoLevel:       pgx.ReadCommitted,
+		AccessMode:     pgx.ReadWrite,
+		DeferrableMode: "",
+		BeginQuery:     "",
 	}
 }

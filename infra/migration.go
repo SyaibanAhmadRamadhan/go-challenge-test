@@ -30,14 +30,17 @@ func ConnForMigrate(url string) *sql.DB {
 	return db
 }
 
-func MigrateMaster() {
+func MigrateMaster(cmd string, arg string, url string) {
 	goose.SetSequential(true)
-	postgresConf := conf.EnvPostgresConf()
-	cmd, arg := cmdMigrateMaster()
-	var url string
+	if url == "" {
+		postgresConf := conf.EnvPostgresConf()
+		url = postgresConf.DBUrl()
+	}
+	if cmd == "" && arg == "" {
+		cmd, arg = cmdMigrateMaster()
+	}
 
 	goose.SetBaseFS(embedMigration)
-	url = postgresConf.DBUrl()
 
 	db := ConnForMigrate(url)
 	defer func() {

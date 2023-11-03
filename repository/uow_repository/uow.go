@@ -1,15 +1,18 @@
 package uow_repository
 
 import (
-	"database/sql"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+
+	"challenge-test-synapsis/repository"
 )
 
 type UnitOfWorkRepositoryImpl struct {
-	tx *sql.Tx
-	db *sql.DB
+	tx pgx.Tx
+	db *pgxpool.Pool
 }
 
-func NewUnitOfWorkRepositoryImpl(db *sql.DB) *UnitOfWorkRepositoryImpl {
+func NewUnitOfWorkRepositoryImpl(db *pgxpool.Pool) repository.UOWRepository {
 	return &UnitOfWorkRepositoryImpl{
 		db: db,
 	}

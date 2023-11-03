@@ -2,13 +2,15 @@ package uow_repository
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/rs/zerolog/log"
+
+	"challenge-test-synapsis/repository"
 )
 
-func (u *UnitOfWorkRepositoryImpl) StartTx(ctx context.Context, opts *sql.TxOptions, fn func() error) error {
+func (u *UnitOfWorkRepositoryImpl) StartTx(ctx context.Context, opts pgx.TxOptions, fn func() error) error {
 	if u.db == nil {
 		err := fmt.Errorf("no Connection Database Available")
 		log.Warn().Msg(err.Error())
@@ -24,16 +26,16 @@ func (u *UnitOfWorkRepositoryImpl) StartTx(ctx context.Context, opts *sql.TxOpti
 
 	err = fn()
 	if err != nil {
-		if errRollback := tx.Rollback(); errRollback != nil {
+		if errRollback := tx.Rollback(ctx); errRollback != nil {
 			log.Warn().Msgf("failed rollback data | err : %v", errRollback)
 			return errRollback
 		}
 
-		log.Info().Msgf("have error, rollback data | %err : %v", err)
+		log.Info().Msgf("have error, rollback data | err: %v", err)
 		return err
 	}
 
-	if errCommit := tx.Commit(); errCommit != nil {
+	if errCommit := tx.Commit(ctx); errCommit != nil {
 		log.Warn().Msgf("failed commit data | %err : %v", errCommit)
 		return errCommit
 	}
@@ -42,11 +44,10 @@ func (u *UnitOfWorkRepositoryImpl) StartTx(ctx context.Context, opts *sql.TxOpti
 	return nil
 }
 
-func (u *UnitOfWorkRepositoryImpl) GetTx() (*sql.Tx, error) {
+func (u *UnitOfWorkRepositoryImpl) GetTx() (pgx.Tx, error) {
 	if u.tx == nil {
-		err := fmt.Errorf("no Transaction Available")
-		log.Warn().Msg(err.Error())
-		return nil, err
+		log.Warn().Msg(repository.ErrTxIsNil.Error())
+		return nil, repository.ErrTxIsNil
 	}
 
 	return u.tx, nil

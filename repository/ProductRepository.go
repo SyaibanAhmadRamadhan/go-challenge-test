@@ -10,5 +10,5 @@ type Product struct {
 }
 
 type ProductRepository interface {
-	UnitOfWorkRepository
+	UOWRepository
 }

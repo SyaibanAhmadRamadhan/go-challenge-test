@@ -5,6 +5,7 @@ CREATE TABLE m_product
     id                  VARCHAR(50) primary key,
     category_product_id VARCHAR(50),
     name                VARCHAR(100),
+    stock               INT,
     price               DECIMAL,
     description         TEXT,
     created_at          DECIMAL,
