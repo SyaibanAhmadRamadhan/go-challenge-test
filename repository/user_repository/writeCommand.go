@@ -20,7 +20,7 @@ func (u *UserRepositoryImpl) Create(ctx context.Context, user *repository.User) 
 
 	_, err = tx.Exec(ctx, query,
 		user.ID,
-		user.Role.ID,
+		user.RoleID,
 		user.Username,
 		user.Email,
 		user.Password,
@@ -46,8 +46,8 @@ func (u *UserRepositoryImpl) Update(ctx context.Context, user *repository.User) 
 		return
 	}
 
-	_, err = tx.Exec(ctx, query,
-		user.Role.ID,
+	res, err := tx.Exec(ctx, query,
+		user.RoleID,
 		user.Username,
 		user.Email,
 		user.Password,
@@ -59,6 +59,10 @@ func (u *UserRepositoryImpl) Update(ctx context.Context, user *repository.User) 
 	if err != nil {
 		log.Warn().Msgf("failed exec command | err: %v", err)
 		return
+	}
+
+	if res.RowsAffected() == 0 {
+		log.Info().Msgf("updated does not meet the conditions")
 	}
 
 	return
@@ -73,13 +77,17 @@ func (u *UserRepositoryImpl) Delete(ctx context.Context, id string) (err error) 
 		return
 	}
 
-	_, err = tx.Exec(ctx, query,
+	res, err := tx.Exec(ctx, query,
 		time.Now().Unix(),
 		id,
 	)
 	if err != nil {
 		log.Warn().Msgf("failed exec command | err: %v", err)
 		return
+	}
+
+	if res.RowsAffected() == 0 {
+		log.Info().Msgf("updated does not meet the conditions")
 	}
 
 	return

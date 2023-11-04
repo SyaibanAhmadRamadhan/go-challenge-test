@@ -18,7 +18,7 @@ var user1 = &repository.User{
 	Email:       "rama",
 	Password:    "rama",
 	PhoneNumber: "rama",
-	Role:        roleDefault,
+	RoleID:      1,
 	Audit:       auditDefault,
 }
 var user2 = repository.User{
@@ -27,7 +27,7 @@ var user2 = repository.User{
 	Email:       "iban2",
 	Password:    "iban2",
 	PhoneNumber: "iban2",
-	Role:        roleDefault,
+	RoleID:      1,
 	Audit:       auditDefault,
 }
 var user3 = repository.User{
@@ -36,12 +36,12 @@ var user3 = repository.User{
 	Email:       "user3",
 	Password:    "user3",
 	PhoneNumber: "user3",
-	Role:        roleDefault,
+	RoleID:      1,
 	Audit:       auditDefault,
 }
 
 func UserRepositoryImplCreate(t *testing.T) {
-	err := UOW.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
+	err := UserRepository.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
 		err := UserRepository.Create(context.Background(), user1)
 		err = UserRepository.Create(context.Background(), &user2)
 		err = UserRepository.Create(context.Background(), &user3)
@@ -69,7 +69,7 @@ func UserRepositoryImplCheckOne(t *testing.T) {
 		},
 	}
 
-	err := UOW.StartTx(context.Background(), pgx.TxOptions{
+	err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 		IsoLevel:       pgx.ReadCommitted,
 		AccessMode:     pgx.ReadOnly,
 		DeferrableMode: "",
@@ -90,11 +90,7 @@ func UserRepositoryImplUpdate(t *testing.T) {
 		Email:       "ibanrama@gmail.com",
 		Password:    "rama123",
 		PhoneNumber: "088295007524",
-		Role: repository.Role{
-			ID:          1,
-			Name:        "",
-			Description: "",
-		},
+		RoleID:      1,
 		Audit: repository.Audit{
 			CreatedAt: timeUnix,
 			UpdatedAt: time.Now().Unix(),
@@ -102,7 +98,7 @@ func UserRepositoryImplUpdate(t *testing.T) {
 		},
 	}
 
-	err := UOW.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
+	err := UserRepository.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
 		err := UserRepository.Update(context.Background(), user1)
 		return err
 	})
@@ -110,7 +106,7 @@ func UserRepositoryImplUpdate(t *testing.T) {
 }
 
 func UserRepositoryImplDelete(t *testing.T) {
-	err := UOW.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
+	err := UserRepository.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
 		err := UserRepository.Delete(context.Background(), "user3")
 		return err
 	})
@@ -136,7 +132,7 @@ func UserRepositoryImplFindOne(t *testing.T) {
 	}
 
 	t.Run("user2", func(t *testing.T) {
-		err := UOW.StartTx(context.Background(), pgx.TxOptions{
+		err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 			IsoLevel:       pgx.ReadCommitted,
 			AccessMode:     pgx.ReadOnly,
 			DeferrableMode: "",
@@ -153,7 +149,7 @@ func UserRepositoryImplFindOne(t *testing.T) {
 	t.Run("after_update_user1", func(t *testing.T) {
 		filters[0].Value = user1.ID
 		filters[1].Value = "ibanrama"
-		err := UOW.StartTx(context.Background(), pgx.TxOptions{
+		err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 			IsoLevel:       pgx.ReadCommitted,
 			AccessMode:     pgx.ReadOnly,
 			DeferrableMode: "",
@@ -175,11 +171,7 @@ func UserRepositoryImplCreateError(t *testing.T) {
 		Email:       "rama2",
 		Password:    "rama2",
 		PhoneNumber: "rama2",
-		Role: repository.Role{
-			ID:          1,
-			Name:        "",
-			Description: "",
-		},
+		RoleID:      1,
 		Audit: repository.Audit{
 			CreatedAt: time.Now().Unix(),
 			CreatedBy: "",
@@ -204,7 +196,7 @@ func UserRepositoryImplUpdateError(t *testing.T) {
 		Email:       "ibanrama@gmail.com",
 		Password:    "rama123",
 		PhoneNumber: "088295007524",
-		Role:        roleDefault,
+		RoleID:      1,
 		Audit:       auditDefault,
 	}
 
@@ -228,7 +220,7 @@ func UserRepositoryImplCheckOneError(t *testing.T) {
 	}
 
 	t.Run("not_found", func(t *testing.T) {
-		err := UOW.StartTx(context.Background(), pgx.TxOptions{
+		err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 			IsoLevel:       pgx.ReadCommitted,
 			AccessMode:     pgx.ReadOnly,
 			DeferrableMode: "",
@@ -243,7 +235,7 @@ func UserRepositoryImplCheckOneError(t *testing.T) {
 	})
 	t.Run("after_delete_user3", func(t *testing.T) {
 		filters[0].Value = user3.ID
-		err := UOW.StartTx(context.Background(), pgx.TxOptions{
+		err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 			IsoLevel:       pgx.ReadCommitted,
 			AccessMode:     pgx.ReadOnly,
 			DeferrableMode: "",
@@ -278,7 +270,7 @@ func UserRepositoryImplFindOneError(t *testing.T) {
 
 	t.Run("user_not_found", func(t *testing.T) {
 		filters[1].Value = "asal"
-		err := UOW.StartTx(context.Background(), pgx.TxOptions{
+		err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 			IsoLevel:       pgx.ReadCommitted,
 			AccessMode:     pgx.ReadOnly,
 			DeferrableMode: "",
@@ -295,7 +287,7 @@ func UserRepositoryImplFindOneError(t *testing.T) {
 	t.Run("after_delete_user3", func(t *testing.T) {
 		filters[0].Value = user3.ID
 		filters[1].Value = user3.Username
-		err := UOW.StartTx(context.Background(), pgx.TxOptions{
+		err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 			IsoLevel:       pgx.ReadCommitted,
 			AccessMode:     pgx.ReadOnly,
 			DeferrableMode: "",

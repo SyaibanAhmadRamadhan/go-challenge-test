@@ -22,9 +22,6 @@ func (u *UserRepositoryImpl) CheckOne(ctx context.Context, filters *[]repository
 
 	err = tx.QueryRow(ctx, query, values...).Scan(&b)
 	if err != nil {
-		if !errors.Is(err, pgx.ErrNoRows) {
-			log.Warn().Msgf("failed query row | err: %v", err)
-		}
 		return
 	}
 
@@ -46,7 +43,7 @@ func (u *UserRepositoryImpl) FindOne(ctx context.Context, filters *[]repository.
 
 	err = tx.QueryRow(ctx, query, values...).Scan(
 		&userScan.ID,
-		&userScan.Role.ID,
+		&userScan.RoleID,
 		&userScan.Username,
 		&userScan.Email,
 		&userScan.Password,

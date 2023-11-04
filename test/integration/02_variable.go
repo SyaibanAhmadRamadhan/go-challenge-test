@@ -10,8 +10,9 @@ import (
 )
 
 var db *pgxpool.Pool
-var UserRepository repository.UserRepository
 var UOW repository.UOWRepository
+var UserRepository repository.UserRepository
+var SessionRepository repository.SessionRepository
 
 var timeUnix = time.Now().Unix()
 
@@ -22,10 +23,4 @@ var auditDefault = repository.Audit{
 	UpdatedBy: sql.NullString{},
 	DeletedAt: sql.NullInt64{},
 	DeletedBy: sql.NullString{},
-}
-
-var roleDefault = repository.Role{
-	ID:          1,
-	Name:        "",
-	Description: "",
 }

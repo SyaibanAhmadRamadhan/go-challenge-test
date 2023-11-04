@@ -8,7 +8,7 @@ func TestInit(t *testing.T) {
 	defer func() {
 		db.Close()
 	}()
-	t.Run("UserRepositoryImplCreate", func(t *testing.T) {
+	t.Run("UserRepositoryImpl", func(t *testing.T) {
 		t.Run("Create", UserRepositoryImplCreate)
 		t.Run("CheckOne", UserRepositoryImplCheckOne)
 		t.Run("Update", UserRepositoryImplUpdate)
@@ -18,6 +18,18 @@ func TestInit(t *testing.T) {
 		t.Run("Update_error", UserRepositoryImplUpdateError)
 		t.Run("FindOne_error", UserRepositoryImplFindOneError)
 		t.Run("CheckOne_error", UserRepositoryImplCheckOneError)
+	})
+
+	t.Run("SessionRepositoryImpl", func(t *testing.T) {
+		t.Run("Create", TestSessionRepositoryImplCreate)
+		t.Run("Update", TestSessionRepositoryImplUpdate)
+		t.Run("Delete", TestSessionRepositoryImplDelete)
+		t.Run("CheckOne", TestSessionRepositoryImplCheckOne)
+		t.Run("FindOne", TestSessionRepositoryImplFindOne)
+		t.Run("Create_error", TestSessionRepositoryImplCreateError)
+		t.Run("Update_error", TestSessionRepositoryImplUpdateError)
+		t.Run("CheckOne_error", TestSessionRepositoryImplCheckOneError)
+		t.Run("FindOne_error", TestSessionRepositoryImplFindOneError)
 	})
 
 }

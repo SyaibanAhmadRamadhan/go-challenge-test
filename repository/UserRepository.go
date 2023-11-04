@@ -6,11 +6,11 @@ import (
 
 type User struct {
 	ID          string `sql:"id"`
+	RoleID      int    `sql:"role_id"`
 	Username    string `sql:"username"`
 	Email       string `sql:"email"`
 	Password    string `sql:"password"`
 	PhoneNumber string `sql:"phone_number"`
-	Role        Role
 	Audit
 }
 

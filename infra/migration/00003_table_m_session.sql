@@ -7,7 +7,7 @@ CREATE TABLE m_session
     token      TEXT,
     device     VARCHAR(255),
     login_at   DECIMAL,
-    ip         INTEGER,
+    ip         VARCHAR(25),
     created_at DECIMAL,
     created_by VARCHAR(50),
     updated_at DECIMAL,
