@@ -1,25 +1,18 @@
-package integration
+package repository
 
 import (
 	"database/sql"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
-
 	"challenge-test-synapsis/repository"
 )
 
-var db *pgxpool.Pool
-var UOW repository.UOWRepository
-var UserRepository repository.UserRepository
-var SessionRepository repository.SessionRepository
+var TimeUnix = time.Now().Unix()
 
-var timeUnix = time.Now().Unix()
-
-var auditDefault = repository.Audit{
-	CreatedAt: timeUnix,
+var AuditDefault = repository.Audit{
+	CreatedAt: TimeUnix,
 	CreatedBy: "",
-	UpdatedAt: timeUnix,
+	UpdatedAt: TimeUnix,
 	UpdatedBy: sql.NullString{},
 	DeletedAt: sql.NullInt64{},
 	DeletedBy: sql.NullString{},

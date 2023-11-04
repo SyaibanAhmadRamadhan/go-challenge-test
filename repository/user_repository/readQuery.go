@@ -12,8 +12,8 @@ import (
 )
 
 func (u *UserRepositoryImpl) CheckOne(ctx context.Context, filters *[]repository.Filter) (b bool, err error) {
-	filterStr, values := repository.GenerateFilters(filters)
-	query := fmt.Sprintf("SELECT EXISTS(SELECT 1 FROM m_user WHERE %s AND deleted_at IS NULL)", filterStr)
+	filterStr, values, _ := repository.GenerateFilters(filters)
+	query := fmt.Sprintf("SELECT EXISTS(SELECT 1 FROM m_user %s)", filterStr)
 
 	tx, err := u.GetTx()
 	if err != nil {
@@ -29,9 +29,9 @@ func (u *UserRepositoryImpl) CheckOne(ctx context.Context, filters *[]repository
 }
 
 func (u *UserRepositoryImpl) FindOne(ctx context.Context, filters *[]repository.Filter) (user *repository.User, err error) {
-	filterStr, values := repository.GenerateFilters(filters)
+	filterStr, values, _ := repository.GenerateFilters(filters)
 	query := fmt.Sprintf(`SELECT id, role_id, username, email, password, phone_number, %s 
-									FROM m_user WHERE %s AND deleted_at IS NULL LIMIT 1`,
+									FROM m_user %s LIMIT 1`,
 		repository.AuditToQuery(""), filterStr)
 
 	tx, err := u.GetTx()
@@ -39,29 +39,29 @@ func (u *UserRepositoryImpl) FindOne(ctx context.Context, filters *[]repository.
 		return
 	}
 
-	var userScan repository.User
+	user = &repository.User{}
 
 	err = tx.QueryRow(ctx, query, values...).Scan(
-		&userScan.ID,
-		&userScan.RoleID,
-		&userScan.Username,
-		&userScan.Email,
-		&userScan.Password,
-		&userScan.PhoneNumber,
-		&userScan.CreatedAt,
-		&userScan.CreatedBy,
-		&userScan.UpdatedAt,
-		&userScan.UpdatedBy,
-		&userScan.DeletedAt,
-		&userScan.DeletedBy,
+		&user.ID,
+		&user.RoleID,
+		&user.Username,
+		&user.Email,
+		&user.Password,
+		&user.PhoneNumber,
+		&user.CreatedAt,
+		&user.CreatedBy,
+		&user.UpdatedAt,
+		&user.UpdatedBy,
+		&user.DeletedAt,
+		&user.DeletedBy,
 	)
 	if err != nil {
 		if !errors.Is(err, pgx.ErrNoRows) {
 			log.Warn().Msgf("failed query row | err: %v", err)
 		}
+		user = nil
 		return
 	}
 
-	user = &userScan
 	return
 }

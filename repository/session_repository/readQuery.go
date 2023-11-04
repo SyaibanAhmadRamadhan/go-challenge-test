@@ -12,8 +12,8 @@ import (
 )
 
 func (s *SessionRepositoryImpl) CheckOne(ctx context.Context, filters *[]repository.Filter) (b bool, err error) {
-	filterStr, values := repository.GenerateFilters(filters)
-	query := fmt.Sprintf(`SELECT EXISTS(SELECT 1 FROM m_session WHERE %s AND deleted_at IS NULL)`, filterStr)
+	filterStr, values, _ := repository.GenerateFilters(filters)
+	query := fmt.Sprintf(`SELECT EXISTS(SELECT 1 FROM m_session %s)`, filterStr)
 
 	tx, err := s.GetTx()
 	if err != nil {
@@ -29,9 +29,9 @@ func (s *SessionRepositoryImpl) CheckOne(ctx context.Context, filters *[]reposit
 }
 
 func (s *SessionRepositoryImpl) FindOne(ctx context.Context, filters *[]repository.Filter) (session *repository.Session, err error) {
-	filterStr, values := repository.GenerateFilters(filters)
+	filterStr, values, _ := repository.GenerateFilters(filters)
 	query := fmt.Sprintf(`SELECT id, user_id, token, device, login_at, ip, %s FROM m_session 
-                                                    WHERE %s AND deleted_at IS NULL`,
+                                                    %s`,
 		repository.AuditToQuery(""), filterStr)
 
 	tx, err := s.GetTx()
@@ -39,29 +39,29 @@ func (s *SessionRepositoryImpl) FindOne(ctx context.Context, filters *[]reposito
 		return
 	}
 
-	var sessionScan repository.Session
+	session = &repository.Session{}
 
 	err = tx.QueryRow(ctx, query, values...).Scan(
-		&sessionScan.ID,
-		&sessionScan.UserID,
-		&sessionScan.Token,
-		&sessionScan.Device,
-		&sessionScan.LoginAt,
-		&sessionScan.IP,
-		&sessionScan.CreatedAt,
-		&sessionScan.CreatedBy,
-		&sessionScan.UpdatedAt,
-		&sessionScan.UpdatedBy,
-		&sessionScan.DeletedAt,
-		&sessionScan.DeletedBy,
+		&session.ID,
+		&session.UserID,
+		&session.Token,
+		&session.Device,
+		&session.LoginAt,
+		&session.IP,
+		&session.CreatedAt,
+		&session.CreatedBy,
+		&session.UpdatedAt,
+		&session.UpdatedBy,
+		&session.DeletedAt,
+		&session.DeletedBy,
 	)
 	if err != nil {
 		if !errors.Is(err, pgx.ErrNoRows) {
 			log.Warn().Msgf("failed query row | err: %v", err)
 		}
+		session = nil
 		return
 	}
 
-	session = &sessionScan
 	return
 }

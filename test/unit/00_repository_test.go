@@ -3,6 +3,7 @@ package unit
 import (
 	"fmt"
 	"testing"
+	"unsafe"
 
 	"challenge-test-synapsis/repository"
 )
@@ -14,32 +15,24 @@ func testVal(str ...any) {
 }
 
 func TestAudit(t *testing.T) {
-	user := repository.User{}
 	str := fmt.Sprintf(`SELECT id, role_id, username, email, password, phone_number, %s
-	FROM m_user WHERE LIMIT 1`, user.Audit.ToQuery(""))
+	FROM m_user WHERE LIMIT 1`, repository.AuditToQuery(""))
 	t.Log(str)
 }
 
 func TestSpesificColumnToString(t *testing.T) {
 	SpesificColumns := &[]repository.Filter{
 		{
-			Prefix:              "",
-			Column:              "column1",
-			Value:               "value1",
-			Operator:            repository.Equality,
-			NextConditionColumn: repository.AND,
-		},
-		{
 			Prefix:              "user.",
-			Column:              "column2",
+			Column:              "deleted_at",
 			Value:               "value2",
-			Operator:            repository.Inequality,
+			Operator:            repository.IsNotNULL,
 			NextConditionColumn: "",
 		},
 	}
 
 	filterStr, values := repository.GenerateFilters(SpesificColumns)
-	res := fmt.Sprintf("SELECT id FROM m_user WHERE %s LIMIT 1", filterStr)
+	res := fmt.Sprintf("SELECT id FROM m_user %s LIMIT 1", filterStr)
 	t.Log(res)
 	testVal(values...)
 }
@@ -58,9 +51,25 @@ func TestPagination_OrderBy(t *testing.T) {
 	t.Log(paginate.GenerateOrderBy())
 }
 
-// func TestValidateColumnFromStruct(t *testing.T) {
-// 	user := masterRepository.User{}
-//
-// 	err := repository.ValidateColumnFromStruct(&user, "id")
-// 	t.Log(err)
-// }
+func TestValidateColumnFromStruct(t *testing.T) {
+	user := repository.User{}
+
+	err := repository.ValidateColumnFromStruct(&user, "id")
+	t.Log(err)
+}
+
+func TestStructEmbedMemoryUsage(t *testing.T) {
+	var categoryProduct repository.CategoryProduct
+	var categoryProductEmbed repository.CategoryProductJoin
+
+	sizeCategoryProduct := int(unsafe.Sizeof(categoryProduct))
+	sizeCategoryProductEmbed := int(unsafe.Sizeof(categoryProductEmbed))
+
+	t.Logf("Size of categoryProduct: %d bytes\n", sizeCategoryProduct)
+	t.Logf("Size of categoryProductEmbed: %d bytes\n", sizeCategoryProductEmbed)
+
+	if sizeCategoryProduct <= sizeCategoryProductEmbed {
+		t.Logf("CategoryProduct should have smaller memory footprint than categoryProductEmbed")
+	}
+
+}

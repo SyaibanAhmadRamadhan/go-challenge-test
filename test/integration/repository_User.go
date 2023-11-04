@@ -217,6 +217,12 @@ func UserRepositoryImplCheckOneError(t *testing.T) {
 			Operator:            repository.Equality,
 			NextConditionColumn: "",
 		},
+		{
+			Prefix:              "",
+			Column:              "deleted_at",
+			Operator:            repository.IsNULL,
+			NextConditionColumn: "",
+		},
 	}
 
 	t.Run("not_found", func(t *testing.T) {
@@ -264,6 +270,12 @@ func UserRepositoryImplFindOneError(t *testing.T) {
 			Column:              "username",
 			Value:               user2.Username,
 			Operator:            repository.Equality,
+			NextConditionColumn: "",
+		},
+		{
+			Prefix:              "",
+			Column:              "deleted_at",
+			Operator:            repository.IsNULL,
 			NextConditionColumn: "",
 		},
 	}

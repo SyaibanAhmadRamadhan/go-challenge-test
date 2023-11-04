@@ -138,6 +138,12 @@ func TestSessionRepositoryImplCheckOne(t *testing.T) {
 			Operator:            repository.Equality,
 			NextConditionColumn: "",
 		},
+		{
+			Prefix:              "",
+			Column:              "deleted_at",
+			Operator:            repository.IsNULL,
+			NextConditionColumn: "",
+		},
 	}
 
 	err := SessionRepository.StartTx(context.Background(), pgx.TxOptions{
@@ -175,6 +181,12 @@ func TestSessionRepositoryImplFindOne(t *testing.T) {
 			Column:              "token",
 			Value:               "tokenUpdate",
 			Operator:            repository.Equality,
+			NextConditionColumn: "",
+		},
+		{
+			Prefix:              "",
+			Column:              "deleted_at",
+			Operator:            repository.IsNULL,
 			NextConditionColumn: "",
 		},
 	}
