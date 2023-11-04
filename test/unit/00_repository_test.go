@@ -31,7 +31,7 @@ func TestSpesificColumnToString(t *testing.T) {
 		},
 	}
 
-	filterStr, values := repository.GenerateFilters(SpesificColumns)
+	filterStr, values, _ := repository.GenerateFilters(SpesificColumns)
 	res := fmt.Sprintf("SELECT id FROM m_user %s LIMIT 1", filterStr)
 	t.Log(res)
 	testVal(values...)
@@ -39,8 +39,8 @@ func TestSpesificColumnToString(t *testing.T) {
 
 func TestPagination_OrderBy(t *testing.T) {
 	paginate := repository.Pagination{
-		Page:   1,
-		Offset: 2,
+		PageSize: 1,
+		Offset:   2,
 		Orders: map[string]string{
 			"colum n1": "value2",
 			"column2":  "ASC",

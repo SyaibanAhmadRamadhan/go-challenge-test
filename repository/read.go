@@ -32,7 +32,7 @@ type Pagination struct {
 	PrefixOrder string            // check unit test for detail. TestPagination_OrderBy
 }
 
-type SearchParam struct {
+type FindAllAndSearchParam struct {
 	Filters    *[]Filter
 	Pagination Pagination
 	Search     string

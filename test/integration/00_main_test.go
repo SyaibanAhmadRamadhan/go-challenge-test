@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"challenge-test-synapsis/infra"
+	"challenge-test-synapsis/repository/categoryProduct_repository"
 	"challenge-test-synapsis/repository/session_repository"
 	"challenge-test-synapsis/repository/uow_repository"
 	"challenge-test-synapsis/repository/user_repository"
@@ -23,6 +24,7 @@ func TestMain(m *testing.M) {
 	UOW = uow_repository.NewUnitOfWorkRepositoryImpl(db)
 	UserRepository = user_repository.NewUserRepositoryImpl(UOW)
 	SessionRepository = session_repository.NewSessionRepositoryImpl(UOW)
+	CategoryProductRepository = categoryProduct_repository.NewCategoryProductRepositoryImpl(UOW)
 
 	code := m.Run()
 

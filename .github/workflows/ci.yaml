@@ -23,6 +23,9 @@ jobs:
 
       - name: run integration test
         run: make integration-test
+
+      - name: run unit test
+        run: make unit-test
   cd:
     needs: ci
     runs-on: ubuntu-latest
