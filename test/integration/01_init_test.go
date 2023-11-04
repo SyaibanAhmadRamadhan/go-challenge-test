@@ -45,4 +45,17 @@ func TestInit(t *testing.T) {
 		t.Run("CheckOne_error", CategoryProductRepositoryImplCheckOneError)
 	})
 
+	t.Run("ProductRepositoryImpl", func(t *testing.T) {
+		t.Run("Create", ProductRepositoryImplCreate)
+		t.Run("CheckOne", ProductRepositoryImplCheckOne)
+		t.Run("Update", ProductRepositoryImplUpdate)
+		t.Run("Delete", ProductRepositoryImplDelete)
+		t.Run("FindOne", ProductRepositoryImplFindOne)
+		t.Run("FindAll", ProductRepositoryImplFindAll)
+		t.Run("Create_error", ProductRepositoryImplCreateError)
+		t.Run("Update_error", ProductRepositoryImplUpdateError)
+		t.Run("FindOne_error", ProductRepositoryImplFindOneError)
+		t.Run("CheckOne_error", ProductRepositoryImplCheckOneError)
+	})
+
 }

@@ -14,6 +14,7 @@ var UOW repository.UOWRepository
 var UserRepository repository.UserRepository
 var SessionRepository repository.SessionRepository
 var CategoryProductRepository repository.CategoryProductRepository
+var ProductRepository repository.ProductRepository
 
 var timeUnix = time.Now().Unix()
 
