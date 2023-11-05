@@ -1,17 +1,19 @@
 package rapi
 
 import (
-	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 
 	"challenge-test-synapsis/conf"
+	"challenge-test-synapsis/usecase"
 )
 
 type Presenter struct {
+	AuthUsecase            usecase.AuthUsecase
+	CategoryProductUsecase usecase.CategoryProductUsecase
+	ProductUsecase         usecase.ProductUsecase
 }
 
 type PresenterConfig struct {
@@ -23,11 +25,13 @@ func NewPresenter(config PresenterConfig) *fiber.App {
 	app := fiber.New()
 	fiberConfig(app)
 
-	app.Get("/", func(ctx *fiber.Ctx) error {
-		time.Sleep(10 * time.Second)
-		return ctx.JSON("hello")
-	})
+	app.Post("/auth/login", config.Presenter.Login)
+	app.Post("/auth/register", config.Presenter.Register)
 
+	app.Use(config.Presenter.Otorisasi)
+	app.Get("/test", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(ctx.Locals("role"))
+	})
 	return app
 }
 
