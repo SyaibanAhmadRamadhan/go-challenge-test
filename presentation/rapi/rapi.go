@@ -25,13 +25,17 @@ func NewPresenter(config PresenterConfig) *fiber.App {
 	app := fiber.New()
 	fiberConfig(app)
 
-	app.Post("/auth/login", config.Presenter.Login)
-	app.Post("/auth/register", config.Presenter.Register)
+	app.Post("/auth/login", CheckLogin, config.Presenter.Login)
+	app.Post("/auth/register", CheckLogin, config.Presenter.Register)
+	app.Get("/category-product", config.Presenter.GetCategoryProduct)
 
-	app.Use(config.Presenter.Otorisasi)
-	app.Get("/test", func(ctx *fiber.Ctx) error {
-		return ctx.JSON(ctx.Locals("role"))
-	})
+	mustLogin := app.Group("", config.Presenter.Otorisasi)
+
+	mustAdmin := mustLogin.Group("", MustBeAdmin)
+	mustAdmin.Post("/category-product", config.Presenter.AddCategoryProduct)
+	mustAdmin.Put("/category-product/:id", config.Presenter.UpdateCategoryProduct)
+	mustAdmin.Delete("/category-product/:id", config.Presenter.DeleteCategoryProduct)
+
 	return app
 }
 

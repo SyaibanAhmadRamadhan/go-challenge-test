@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"regexp"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -15,9 +17,14 @@ func (r *LoginRequest) Validate() error {
 	if r.Email == "" {
 		errBadRequest["email"] = append(errBadRequest["email"], Required)
 	}
-	email := MaxMinString(r.Email, 3, 55)
+	email := MaxMinString(r.Email, 12, 55)
 	if email != "" {
 		errBadRequest["email"] = append(errBadRequest["email"], email)
+	}
+
+	match, err := regexp.MatchString(`^([A-Za-z.]|[0-9])+@gmail.com$`, r.Email)
+	if err != nil || !match {
+		errBadRequest["email"] = append(errBadRequest["email"], EmailMsg)
 	}
 
 	if r.Password == "" {
@@ -29,10 +36,9 @@ func (r *LoginRequest) Validate() error {
 	}
 
 	if len(errBadRequest) != 0 {
-		return &ErrorHttp{
+		return &ErrHttp{
 			Code:    fiber.StatusBadRequest,
 			Message: "BAD REQUEST",
-			Data:    nil,
 			Err:     errBadRequest,
 		}
 	}

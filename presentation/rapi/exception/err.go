@@ -12,47 +12,50 @@ import (
 
 func Err(c *fiber.Ctx, err error) error {
 	var (
-		errHttp          *schema.ErrorHttp
+		errHttp          *schema.ErrHttp
 		errUnmarshalType *json.UnmarshalTypeError
 		errSyntak        *json.SyntaxError
 	)
 
 	switch {
 	case errors.As(err, &errUnmarshalType):
-		err = &schema.ErrorHttp{
+		err = &schema.ErrHttp{
 			Code:    fiber.StatusUnprocessableEntity,
 			Message: "UnprocessableEntity",
-			Data:    nil,
 			Err:     err.Error(),
 		}
 
 	case errors.As(err, &errSyntak):
-		err = &schema.ErrorHttp{
+		err = &schema.ErrHttp{
 			Code:    fiber.StatusUnprocessableEntity,
 			Message: "unexpected end of json input",
-			Data:    nil,
 			Err:     err.Error(),
 		}
 	case errors.Is(err, context.DeadlineExceeded):
-		err = &schema.ErrorHttp{
+		err = &schema.ErrHttp{
 			Code:    fiber.StatusRequestTimeout,
 			Message: "request time out",
-			Data:    nil,
 			Err:     err.Error(),
 		}
 	}
 
 	ok := errors.As(err, &errHttp)
 	if !ok {
-		err = &schema.ErrorHttp{
+		err = &schema.ErrHttp{
 			Code:    fiber.StatusInternalServerError,
 			Message: "internal server error",
-			Data:    nil,
 			Err:     err.Error(),
 		}
 		errors.As(err, &errHttp)
 	}
 
-	return c.Status(err.(*schema.ErrorHttp).Code).JSON(err)
+	response := schema.Response{
+		Code:    err.(*schema.ErrHttp).Code,
+		Message: err.(*schema.ErrHttp).Message,
+		Data:    nil,
+		Err:     err.(*schema.ErrHttp).Err,
+	}
+
+	return c.Status(response.Code).JSON(response)
 
 }

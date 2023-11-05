@@ -2,7 +2,7 @@
 
 ## Ecommerce documentation
 - Entity Relationship Digram (erd): https://app.diagrams.net/#G1MJin66fmBRSNOQWQ_QxVG_Fu1zFG89iX
-
+- Postman for documentation api: https://speeding-rocket-378837.postman.co/workspace/learning~fb963e59-3bd9-4dfb-9c7f-0d5fd0cbc002/collection/27426623-17d0c6c5-c483-4866-9f05-832da26c8784?action=share&creator=27426623
 ## Explanation
 ### conf folder
 - The conf folder contains the load .env file folder, inside which there are several init envs, such as getenv for ```postgres``` or ```user admin```. This folder makes it easier for me when I want integration with vault or other things.
@@ -27,5 +27,5 @@
 - I have created a goose migration that runs on cmd from the go binary directly, which aims to make it easier to migrate without having to run other cmd such as ```goose up``` or others. If you want to check it, please run ```make migrate``` or ```go run main.go migrate```
 - You can even run the compiled go binary to carry out the migration. for example, run ```./main.go migrate```
 ### ci/cd
-- I have prepared ci/cd on github action. ci itself aims to carry out integration tests and unit tests, cd itself is for carrying out deployment
+- I have prepared ci/cd on GitHub action. ci itself aims to carry out integration tests and unit tests, cd itself is for carrying out deployment
 - if ci fails then cd will not run

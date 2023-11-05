@@ -7,6 +7,7 @@ import (
 type Product struct {
 	ID          string `sql:"id"`
 	Name        string `sql:"name"`
+	Stock       int    `sql:"stock"`
 	Price       int    `sql:"price"`
 	Description string `sql:"description"`
 	Audit

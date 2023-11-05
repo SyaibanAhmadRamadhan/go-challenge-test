@@ -36,10 +36,9 @@ func (p *Presenter) Login(c *fiber.Ctx) error {
 
 	if err != nil {
 		if errors.Is(err, usecase.ErrInvalidEmailOrPass) {
-			err = &schema.ErrorHttp{
+			err = &schema.ErrHttp{
 				Code:    fiber.StatusBadRequest,
 				Message: "BAD REQUEST",
-				Data:    nil,
 				Err:     err.Error(),
 			}
 		}
@@ -47,13 +46,18 @@ func (p *Presenter) Login(c *fiber.Ctx) error {
 		return exception.Err(c, err)
 	}
 
-	return c.Status(200).JSON(schema.ResponseAuth{
-		ID:          auth.ID,
-		RoleID:      auth.RoleID,
-		Username:    auth.Username,
-		Email:       auth.Email,
-		PhoneNumber: auth.PhoneNumber,
-		Token:       auth.Token,
+	return c.Status(200).JSON(schema.Response{
+		Code:    200,
+		Message: "data user",
+		Data: schema.ResponseAuth{
+			ID:          auth.ID,
+			RoleID:      auth.RoleID,
+			Username:    auth.Username,
+			Email:       auth.Email,
+			PhoneNumber: auth.PhoneNumber,
+			Token:       auth.Token,
+		},
+		Err: nil,
 	})
 }
 
@@ -87,10 +91,9 @@ func (p *Presenter) Register(c *fiber.Ctx) error {
 
 	if err != nil {
 		if errors.Is(err, usecase.ErrEmailIsRegistered) {
-			err = &schema.ErrorHttp{
+			err = &schema.ErrHttp{
 				Code:    fiber.StatusBadRequest,
 				Message: "BAD REQUEST",
-				Data:    nil,
 				Err: map[string][]string{
 					"email": {
 						"email is registered",
@@ -102,43 +105,17 @@ func (p *Presenter) Register(c *fiber.Ctx) error {
 		return exception.Err(c, err)
 	}
 
-	return c.Status(200).JSON(schema.ResponseAuth{
-		ID:          auth.ID,
-		RoleID:      auth.RoleID,
-		Username:    auth.Username,
-		Email:       auth.Email,
-		PhoneNumber: auth.PhoneNumber,
-		Token:       auth.Token,
+	return c.Status(200).JSON(schema.Response{
+		Code:    200,
+		Message: "data user",
+		Data: schema.ResponseAuth{
+			ID:          auth.ID,
+			RoleID:      auth.RoleID,
+			Username:    auth.Username,
+			Email:       auth.Email,
+			PhoneNumber: auth.PhoneNumber,
+			Token:       auth.Token,
+		},
+		Err: nil,
 	})
-}
-
-func (p *Presenter) Otorisasi(c *fiber.Ctx) error {
-	device := c.Get("User-Agent")
-	token := c.Get("Authorization")
-	userID := c.Get("User-Id")
-	ip := c.IP()
-
-	common := usecase.CommonParam{
-		Device: device,
-		IP:     ip,
-		UserID: userID,
-	}
-	auth, err := p.AuthUsecase.Otorisasi(c.Context(), token, &common)
-
-	if err != nil {
-		if errors.Is(err, usecase.ErrInvalidToken) {
-			err = &schema.ErrorHttp{
-				Code:    fiber.StatusUnauthorized,
-				Message: "UNAUTHORIZATION",
-				Data:    nil,
-				Err:     err.Error(),
-			}
-		}
-
-		return exception.Err(c, err)
-	}
-
-	c.Set("Authorization", auth.Token)
-	c.Locals("role", auth.RoleID)
-	return c.Next()
 }

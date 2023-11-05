@@ -4,11 +4,11 @@ import (
 	"fmt"
 )
 
-var Required = "field ini tidak boleh dikosongkan"
-var MinString = "field ini tidak boleh kurang dari %d"
-var MaxString = "field ini tidak boleh lebih dari %d"
-var PasswordAndRePassword = "password dan re password tidak sesuai"
-var EmailMsg = "email harus menggunakan yourmail@gmail.com"
+var Required = "This field is required"
+var MinString = "This field cannot be less than %d"
+var MaxString = "This field cannot be more than %d"
+var PasswordAndRePassword = "password and re-password do not match"
+var EmailMsg = "email must be yourmail@gmail.com"
 
 func MaxMinString(s string, min, max int) string {
 	switch {

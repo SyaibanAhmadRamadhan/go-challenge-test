@@ -1,14 +1,17 @@
 package schema
 
 import (
+	"regexp"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 type RegisterRequest struct {
-	Username    string `json:"username,omitempty"`
-	Email       string `json:"email,omitempty"`
-	Password    string `json:"password,omitempty"`
-	PhoneNumber string `json:"phone_number,omitempty"`
+	Username    string `json:"username"`
+	Email       string `json:"email"`
+	Password    string `json:"password"`
+	RePassword  string `json:"re_password"`
+	PhoneNumber string `json:"phone_number"`
 }
 
 func (r *RegisterRequest) Validate() error {
@@ -17,9 +20,14 @@ func (r *RegisterRequest) Validate() error {
 	if r.Email == "" {
 		errBadRequest["email"] = append(errBadRequest["email"], Required)
 	}
-	email := MaxMinString(r.Email, 3, 55)
+	email := MaxMinString(r.Email, 12, 55)
 	if email != "" {
 		errBadRequest["email"] = append(errBadRequest["email"], email)
+	}
+
+	match, err := regexp.MatchString(`^([A-Za-z.]|[0-9])+@gmail.com$`, r.Email)
+	if err != nil || !match {
+		errBadRequest["email"] = append(errBadRequest["email"], EmailMsg)
 	}
 
 	if r.Username == "" {
@@ -45,12 +53,15 @@ func (r *RegisterRequest) Validate() error {
 	if password != "" {
 		errBadRequest["password"] = append(errBadRequest["password"], password)
 	}
+	if r.Password != r.RePassword {
+		errBadRequest["password"] = append(errBadRequest["password"], PasswordAndRePassword)
+		errBadRequest["re_password"] = append(errBadRequest["re_password"], PasswordAndRePassword)
+	}
 
 	if len(errBadRequest) != 0 {
-		return &ErrorHttp{
+		return &ErrHttp{
 			Code:    fiber.StatusBadRequest,
 			Message: "BAD REQUEST",
-			Data:    nil,
 			Err:     errBadRequest,
 		}
 	}

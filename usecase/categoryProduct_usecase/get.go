@@ -31,9 +31,6 @@ func (c *CategoryProductUsecaseImpl) GetAndSearch(ctx context.Context, search st
 		},
 		Search: search,
 	}
-	if search != "" {
-		findAllAndSearch.Pagination.Offset = 0
-	}
 
 	err = c.categoryProductRepo.StartTx(ctx, pgx.TxOptions{
 		IsoLevel:   pgx.ReadCommitted,

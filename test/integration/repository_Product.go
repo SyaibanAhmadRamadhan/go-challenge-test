@@ -15,6 +15,7 @@ import (
 var product1 = &repository.Product{
 	ID:          "cp1",
 	Name:        "cp1",
+	Stock:       10,
 	Price:       123,
 	Description: "apa aja",
 	Audit:       auditDefault,
@@ -22,6 +23,7 @@ var product1 = &repository.Product{
 var product2 = &repository.Product{
 	ID:          "cp2",
 	Name:        "cp2",
+	Stock:       10,
 	Price:       123,
 	Description: "apa aja2",
 	Audit:       auditDefault,
@@ -29,6 +31,7 @@ var product2 = &repository.Product{
 var product3 = &repository.Product{
 	ID:          "cp3",
 	Name:        "cp3",
+	Stock:       10,
 	Price:       123,
 	Description: "apa aja3",
 	Audit:       auditDefault,
@@ -36,6 +39,7 @@ var product3 = &repository.Product{
 var product4 = &repository.Product{
 	ID:          "cp46",
 	Name:        "cp46",
+	Stock:       10,
 	Price:       123,
 	Description: "apa aja4",
 	Audit:       auditDefault,
@@ -43,6 +47,7 @@ var product4 = &repository.Product{
 var product5 = &repository.Product{
 	ID:          "cp56",
 	Name:        "cp56",
+	Stock:       10,
 	Price:       123,
 	Description: "apa aja5",
 	Audit:       auditDefault,
@@ -50,6 +55,7 @@ var product5 = &repository.Product{
 var product6 = &repository.Product{
 	ID:          "cp6",
 	Name:        "cp6",
+	Stock:       10,
 	Price:       123,
 	Description: "apa aja6",
 	Audit:       auditDefault,
@@ -98,6 +104,7 @@ func ProductRepositoryImplUpdate(t *testing.T) {
 	product1 = &repository.Product{
 		ID:          "cp1",
 		Name:        "baju keren",
+		Stock:       10,
 		Price:       1000000,
 		Description: "baju mahal",
 		Audit: repository.Audit{
