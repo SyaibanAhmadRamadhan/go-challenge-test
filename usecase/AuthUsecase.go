@@ -34,14 +34,8 @@ type OtorisasiResult struct {
 	Token  string
 }
 
-type OtorisasiParam struct {
-	UserID string
-	Token  string
-	Device string
-}
-
 type AuthUsecase interface {
 	Register(ctx context.Context, param *RegisterParam) (res *AuthResult, err error)
 	Login(ctx context.Context, param *LoginParam) (res *AuthResult, err error)
-	Otorisasi(ctx context.Context, param *OtorisasiParam) (res *OtorisasiResult, err error)
+	Otorisasi(ctx context.Context, token string, param *CommonParam) (res *OtorisasiResult, err error)
 }

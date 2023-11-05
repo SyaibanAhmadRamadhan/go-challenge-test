@@ -42,6 +42,9 @@ func (a *AuthUsecaseImpl) Register(ctx context.Context, param *usecase.RegisterP
 		AccessMode: pgx.ReadWrite,
 	}, func() error {
 		exist, err := a.userRepo.CheckOne(ctx, filterCheckMailAndPhoneNumber)
+		if err != nil {
+			return err
+		}
 		if exist {
 			err = usecase.ErrEmailIsRegistered
 			return err

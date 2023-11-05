@@ -54,9 +54,8 @@ func AuthUsecaseImplLogin(t *testing.T) {
 
 func AuthUsecaseImplOtorisasi(t *testing.T) {
 	t.Run("token_in_redis", func(t *testing.T) {
-		res, err := AuthUsecase.Otorisasi(context.Background(), &usecase.OtorisasiParam{
+		res, err := AuthUsecase.Otorisasi(context.Background(), token, &usecase.CommonParam{
 			UserID: id,
-			Token:  token,
 			Device: device,
 		})
 		assert.NoError(t, err)
@@ -65,9 +64,8 @@ func AuthUsecaseImplOtorisasi(t *testing.T) {
 
 	newToken := ""
 	t.Run("generate_a_new_token", func(t *testing.T) {
-		res, err := AuthUsecase.Otorisasi(context.Background(), &usecase.OtorisasiParam{
+		res, err := AuthUsecase.Otorisasi(context.Background(), sessionExp.Token, &usecase.CommonParam{
 			UserID: sessionExp.UserID,
-			Token:  sessionExp.Token,
 			Device: device,
 		})
 		newToken = res.Token
@@ -76,9 +74,8 @@ func AuthUsecaseImplOtorisasi(t *testing.T) {
 	})
 
 	t.Run("validate_new_token", func(t *testing.T) {
-		res, err := AuthUsecase.Otorisasi(context.Background(), &usecase.OtorisasiParam{
+		res, err := AuthUsecase.Otorisasi(context.Background(), newToken, &usecase.CommonParam{
 			UserID: sessionExp.UserID,
-			Token:  newToken,
 			Device: device,
 		})
 		assert.NoError(t, err)
@@ -87,9 +84,8 @@ func AuthUsecaseImplOtorisasi(t *testing.T) {
 
 	t.Run("token_invalid", func(t *testing.T) {
 		token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkxNzExOTksInN1YiI6IjAxSEVGNlM2RTdTOUQzNFE4In0.6kDtcMj6nBZW-5rCrRzg1f3l2NdPJogKvOV2UGzI8js"
-		res, err := AuthUsecase.Otorisasi(context.Background(), &usecase.OtorisasiParam{
+		res, err := AuthUsecase.Otorisasi(context.Background(), token, &usecase.CommonParam{
 			UserID: id,
-			Token:  token,
 			Device: device,
 		})
 		assert.ErrorIs(t, err, usecase.ErrInvalidToken)

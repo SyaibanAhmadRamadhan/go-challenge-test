@@ -14,9 +14,9 @@ import (
 	"challenge-test-synapsis/usecase"
 )
 
-func (a *AuthUsecaseImpl) Otorisasi(ctx context.Context, param *usecase.OtorisasiParam) (res *usecase.OtorisasiResult, err error) {
+func (a *AuthUsecaseImpl) Otorisasi(ctx context.Context, token string, param *usecase.CommonParam) (res *usecase.OtorisasiResult, err error) {
 	confJwt := conf.EnvJwtConf()
-	claims, err := usecase.ClaimJwtHS256(param.Token, confJwt.ATkey)
+	claims, err := usecase.ClaimJwtHS256(token, confJwt.ATkey)
 	if err != nil {
 		if !errors.Is(err, jwt.ErrTokenExpired) {
 			return res, usecase.ErrInvalidToken
@@ -25,7 +25,7 @@ func (a *AuthUsecaseImpl) Otorisasi(ctx context.Context, param *usecase.Otorisas
 		token, role, err := a.sessionManagementAuthUpdate(ctx, &sessionManagementAuthUpdate{
 			UserID: param.UserID,
 			Device: param.Device,
-			Token:  param.Token,
+			Token:  token,
 		})
 
 		res = &usecase.OtorisasiResult{
@@ -59,7 +59,7 @@ func (a *AuthUsecaseImpl) Otorisasi(ctx context.Context, param *usecase.Otorisas
 
 	roleInt, _ := strconv.Atoi(sessionArr[2])
 	res = &usecase.OtorisasiResult{
-		Token:  param.Token,
+		Token:  token,
 		RoleID: roleInt,
 	}
 	return
