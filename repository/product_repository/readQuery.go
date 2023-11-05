@@ -92,7 +92,7 @@ func (p *ProductRepositoryImpl) FindAllAndSearch(
 	query := fmt.Sprintf("SELECT id, name, price, description, %s FROM m_product %s %s %s LIMIT $%d OFFSET $%d",
 		repository.AuditToQuery(""), filterStr, search, orderStr, lastPH, lastPH+1)
 
-	values = append(values, param.Pagination.PageSize)
+	values = append(values, param.Pagination.Limit)
 	values = append(values, param.Pagination.Offset)
 
 	rows, err := tx.Query(ctx, query, values...)

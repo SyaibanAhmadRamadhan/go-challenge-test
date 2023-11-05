@@ -14,7 +14,7 @@ import (
 )
 
 var session1 = &repository.Session{
-	ID:      1,
+	ID:      "1",
 	Token:   "token",
 	Device:  "device",
 	LoginAt: timeUnix,
@@ -24,7 +24,7 @@ var session1 = &repository.Session{
 }
 
 var session2 = &repository.Session{
-	ID:      2,
+	ID:      "2",
 	Token:   "token",
 	Device:  "device",
 	LoginAt: timeUnix,
@@ -34,9 +34,19 @@ var session2 = &repository.Session{
 }
 
 var session3 = &repository.Session{
-	ID:      3,
+	ID:      "3",
 	Token:   "token",
 	Device:  "device",
+	LoginAt: timeUnix,
+	IP:      "127.0.0.1",
+	Audit:   auditDefault,
+	UserID:  user3.ID,
+}
+
+var sessionExp = &repository.Session{
+	ID:      "4",
+	Token:   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkxNzExOTksInN1YiI6IjAxSEVGNlM2RTdTOUJaSDBQUUYyNDQzNFE4In0.6kDtcMj6nBZW-5rCrRzg1f3l2NdPJogKvOV2UGzI8js",
+	Device:  "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
 	LoginAt: timeUnix,
 	IP:      "127.0.0.1",
 	Audit:   auditDefault,
@@ -53,13 +63,16 @@ func TestSessionRepositoryImplCreate(t *testing.T) {
 
 		err = SessionRepository.Create(context.Background(), session3)
 		assert.NoError(t, err)
+
+		err = SessionRepository.Create(context.Background(), sessionExp)
+		assert.NoError(t, err)
 		return nil
 	})
 }
 
 func TestSessionRepositoryImplUpdate(t *testing.T) {
 	session1Update := &repository.Session{
-		ID:      1,
+		ID:      "1",
 		Token:   "tokenUpdate",
 		Device:  "device",
 		LoginAt: timeUnix,
@@ -100,7 +113,7 @@ func TestSessionRepositoryImplDelete(t *testing.T) {
 
 	t.Run("does_not_meet_the_conditions_1", func(t *testing.T) {
 		_ = SessionRepository.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
-			err := SessionRepository.Delete(context.Background(), 1, "asal")
+			err := SessionRepository.Delete(context.Background(), "1", "asal")
 			assert.NoError(t, err)
 			return nil
 		})
@@ -120,7 +133,7 @@ func TestSessionRepositoryImplCheckOne(t *testing.T) {
 		{
 			Prefix:              "",
 			Column:              "id",
-			Value:               strconv.Itoa(session1.ID),
+			Value:               session1.ID,
 			Operator:            repository.Equality,
 			NextConditionColumn: "AND",
 		},
@@ -165,7 +178,7 @@ func TestSessionRepositoryImplFindOne(t *testing.T) {
 		{
 			Prefix:              "",
 			Column:              "id",
-			Value:               strconv.Itoa(session1.ID),
+			Value:               session1.ID,
 			Operator:            repository.Equality,
 			NextConditionColumn: "AND",
 		},

@@ -21,14 +21,24 @@ func main() {
 
 	conf.InitLogger()
 	conf.LoadEnv()
-	pgConf := conf.EnvPostgresConf()
 
 	if args[1] == "migrate" {
 		infra.MigrateMaster("", "", "")
 		return
 	}
 
-	_ = infra.OpenConnectionDB(pgConf)
+	pgConn := infra.OpenConnectionDB(conf.EnvPostgresConf())
+	defer func() {
+		pgConn.Close()
+	}()
+
+	rcConn := infra.OpenConnectionRedis(conf.EnvRedisConf())
+	defer func() {
+		err := rcConn.Close()
+		if err != nil {
+			log.Warn().Msgf("failed closed redis connection | err: %v", err)
+		}
+	}()
 
 	presenter := rapi.Presenter{}
 	presenterConfig := rapi.PresenterConfig{

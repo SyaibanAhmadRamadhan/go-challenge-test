@@ -26,7 +26,7 @@ type Filter struct {
 }
 
 type Pagination struct {
-	PageSize    int
+	Limit       int
 	Offset      int
 	Orders      map[string]string // key: column, value: ASC OR DESC. check unit test for detail. TestPagination_OrderBy
 	PrefixOrder string            // check unit test for detail. TestPagination_OrderBy

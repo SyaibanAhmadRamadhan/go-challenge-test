@@ -178,8 +178,8 @@ func ProductRepositoryImplFindAll(t *testing.T) {
 	page := 1
 	pageSize := 2
 	paginate := repository.Pagination{
-		PageSize: pageSize,
-		Offset:   (page - 1) * pageSize,
+		Limit:  pageSize,
+		Offset: (page - 1) * pageSize,
 		Orders: map[string]string{
 			"id": "DESC",
 		},

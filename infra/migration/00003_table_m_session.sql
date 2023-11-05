@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 CREATE TABLE m_session
 (
-    id         SERIAL primary key,
+    id         VARCHAR(50) primary key,
     user_id    VARCHAR(50),
     token      TEXT,
     device     VARCHAR(255),

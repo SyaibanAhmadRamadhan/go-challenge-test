@@ -14,7 +14,7 @@ import (
 	"challenge-test-synapsis/conf"
 )
 
-func PostgresSetup(pool *dockertest.Pool) (*pgxpool.Pool, *dockertest.Resource, string) {
+func PostgresContainer(pool *dockertest.Pool) (*pgxpool.Pool, *dockertest.Resource, string) {
 	resource, err := pool.RunWithOptions(&dockertest.RunOptions{
 		Repository: "postgres",
 		Tag:        "11",

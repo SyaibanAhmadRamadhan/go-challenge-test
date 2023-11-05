@@ -8,7 +8,9 @@ CREATE TABLE m_role
 );
 
 INSERT INTO m_role (id, name, description)
-VALUES (1, 'member', 'desc')
+VALUES (1, 'member', 'desc');
+INSERT INTO m_role (id, name, description)
+VALUES (2, 'admin', 'admin');
 -- +goose StatementEnd
 
 -- +goose Down

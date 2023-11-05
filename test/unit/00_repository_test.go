@@ -23,11 +23,19 @@ func TestAudit(t *testing.T) {
 func TestSpesificColumnToString(t *testing.T) {
 	SpesificColumns := &[]repository.Filter{
 		{
-			Prefix:              "user.",
-			Column:              "deleted_at",
-			Value:               "value2",
-			Operator:            repository.IsNotNULL,
-			NextConditionColumn: "",
+			Column:              "email",
+			Value:               "param.Email",
+			Operator:            repository.Equality,
+			NextConditionColumn: "OR",
+		},
+		{
+			Column:   "phone_number",
+			Value:    "param.Email",
+			Operator: repository.Equality,
+		},
+		{
+			Column:   "deleted_at",
+			Operator: repository.IsNULL,
 		},
 	}
 
@@ -39,8 +47,8 @@ func TestSpesificColumnToString(t *testing.T) {
 
 func TestPagination_OrderBy(t *testing.T) {
 	paginate := repository.Pagination{
-		PageSize: 1,
-		Offset:   2,
+		Limit:  1,
+		Offset: 2,
 		Orders: map[string]string{
 			"colum n1": "value2",
 			"column2":  "ASC",

@@ -64,7 +64,7 @@ func (s *SessionRepositoryImpl) Update(ctx context.Context, session *repository.
 	return
 }
 
-func (s *SessionRepositoryImpl) Delete(ctx context.Context, id int, userID string) (err error) {
+func (s *SessionRepositoryImpl) Delete(ctx context.Context, id string, userID string) (err error) {
 	query := `UPDATE m_session SET deleted_at=$1, deleted_by=$2 WHERE id=$3 AND user_id=$4 AND deleted_at IS NULL`
 
 	tx, err := s.GetTx()

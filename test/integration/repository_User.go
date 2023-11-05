@@ -39,6 +39,15 @@ var user3 = repository.User{
 	RoleID:      1,
 	Audit:       auditDefault,
 }
+var user4 = repository.User{
+	ID:          "user4",
+	Username:    "user3",
+	Email:       "user3",
+	Password:    "user3",
+	PhoneNumber: "user3",
+	RoleID:      1,
+	Audit:       auditDefault,
+}
 
 func UserRepositoryImplCreate(t *testing.T) {
 	err := UserRepository.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
@@ -87,7 +96,7 @@ func UserRepositoryImplUpdate(t *testing.T) {
 	user1 = &repository.User{
 		ID:          "rama",
 		Username:    "ibanrama",
-		Email:       "ibanrama@gmail.com",
+		Email:       "tes@gmail.com",
 		Password:    "rama123",
 		PhoneNumber: "088295007524",
 		RoleID:      1,
@@ -107,7 +116,7 @@ func UserRepositoryImplUpdate(t *testing.T) {
 
 func UserRepositoryImplDelete(t *testing.T) {
 	err := UserRepository.StartTx(context.Background(), repository.LevelReadCommitted(), func() error {
-		err := UserRepository.Delete(context.Background(), "user3")
+		err := UserRepository.Delete(context.Background(), "user4")
 		return err
 	})
 	assert.NoError(t, err)
@@ -239,8 +248,8 @@ func UserRepositoryImplCheckOneError(t *testing.T) {
 
 		assert.NoError(t, err)
 	})
-	t.Run("after_delete_user3", func(t *testing.T) {
-		filters[0].Value = user3.ID
+	t.Run("after_delete_user4", func(t *testing.T) {
+		filters[0].Value = user4.ID
 		err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 			IsoLevel:       pgx.ReadCommitted,
 			AccessMode:     pgx.ReadOnly,
@@ -296,9 +305,9 @@ func UserRepositoryImplFindOneError(t *testing.T) {
 		assert.ErrorIs(t, err, pgx.ErrNoRows)
 	})
 
-	t.Run("after_delete_user3", func(t *testing.T) {
-		filters[0].Value = user3.ID
-		filters[1].Value = user3.Username
+	t.Run("after_delete_user4", func(t *testing.T) {
+		filters[0].Value = user4.ID
+		filters[1].Value = user4.Username
 		err := UserRepository.StartTx(context.Background(), pgx.TxOptions{
 			IsoLevel:       pgx.ReadCommitted,
 			AccessMode:     pgx.ReadOnly,

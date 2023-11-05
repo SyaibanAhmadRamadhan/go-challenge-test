@@ -58,4 +58,12 @@ func TestInit(t *testing.T) {
 		t.Run("CheckOne_error", ProductRepositoryImplCheckOneError)
 	})
 
+	t.Run("AuthUsecaseImpl", func(t *testing.T) {
+		t.Run("Register", AuthUsecaseImplRegister)
+		t.Run("Login", AuthUsecaseImplLogin)
+		t.Run("Otorisasi", AuthUsecaseImplOtorisasi)
+		t.Run("Register_error", AuthUsecaseImplRegisterError)
+		t.Run("Login_error", AuthUsecaseImplLoginError)
+	})
+
 }

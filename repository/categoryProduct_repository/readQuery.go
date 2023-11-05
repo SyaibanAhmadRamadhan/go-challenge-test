@@ -82,7 +82,7 @@ func (c *CategoryProductRepositoryImpl) FindAllAndSearch(
 	values = append(values, "%"+param.Search+"%")
 
 	queryCount := fmt.Sprintf("SELECT COUNT(*) FROM m_category_product %s %s", filterStr, search)
-	
+
 	err = tx.QueryRow(ctx, queryCount, values...).Scan(&total)
 	if err != nil {
 		return
@@ -91,7 +91,7 @@ func (c *CategoryProductRepositoryImpl) FindAllAndSearch(
 	query := fmt.Sprintf("SELECT id, name, %s FROM m_category_product %s %s %s LIMIT $%d OFFSET $%d",
 		repository.AuditToQuery(""), filterStr, search, orderStr, lastPH, lastPH+1)
 
-	values = append(values, param.Pagination.PageSize)
+	values = append(values, param.Pagination.Limit)
 	values = append(values, param.Pagination.Offset)
 
 	rows, err := tx.Query(ctx, query, values...)
