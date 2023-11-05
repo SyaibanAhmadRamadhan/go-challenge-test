@@ -62,6 +62,7 @@ func (p *Pagination) GenerateOrderBy() (str string) {
 }
 
 func GenerateFilters(filters *[]Filter) (str string, values []any, lastPlaceHolder int) {
+	lastPlaceHolder = 1
 	if filters != nil {
 		str += "WHERE "
 		latest := (*filters)[len(*filters)-1]
@@ -70,20 +71,24 @@ func GenerateFilters(filters *[]Filter) (str string, values []any, lastPlaceHold
 				str += fmt.Sprintf("%s%s %s",
 					filter.Prefix, filter.Column, filter.Operator)
 			} else {
-				if filter.Operator == "" {
-					filter.Operator = Equality
+				if filter.Value != "" {
+					if filter.Operator == "" {
+						filter.Operator = Equality
+					}
+					values = append(values, filter.Value)
+					str += fmt.Sprintf("%s%s %s $%d",
+						filter.Prefix, filter.Column, filter.Operator, i+1)
+
+					if filter != latest {
+						if filter.NextConditionColumn == "" {
+							filter.NextConditionColumn = AND
+						}
+						str += fmt.Sprintf(" %s ", filter.NextConditionColumn)
+					}
+					lastPlaceHolder += i + 1
 				}
-				values = append(values, filter.Value)
-				str += fmt.Sprintf("%s%s %s $%d",
-					filter.Prefix, filter.Column, filter.Operator, i+1)
 			}
-			if filter != latest {
-				if filter.NextConditionColumn == "" {
-					filter.NextConditionColumn = AND
-				}
-				str += fmt.Sprintf(" %s ", filter.NextConditionColumn)
-			}
-			lastPlaceHolder = i + 1
+
 		}
 	}
 

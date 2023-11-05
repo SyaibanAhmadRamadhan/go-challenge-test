@@ -153,15 +153,18 @@ func CategoryProductRepositoryImplFindOne(t *testing.T) {
 func CategoryProductRepositoryImplFindAll(t *testing.T) {
 	filters := []repository.Filter{
 		{
-			Prefix:              "",
-			Column:              "deleted_at",
-			Value:               categoryProduct2.ID,
-			Operator:            repository.IsNULL,
-			NextConditionColumn: "",
+			Column:   "id",
+			Value:    "",
+			Operator: repository.Equality,
+		},
+		{
+			Column:   "deleted_at",
+			Value:    categoryProduct2.ID,
+			Operator: repository.IsNULL,
 		},
 	}
 
-	page := 2
+	page := 1
 	pageSize := 2
 	paginate := repository.Pagination{
 		Limit:  pageSize,
@@ -175,7 +178,7 @@ func CategoryProductRepositoryImplFindAll(t *testing.T) {
 	findAllAndSearch := repository.FindAllAndSearchParam{
 		Filters:    &filters,
 		Pagination: paginate,
-		Search:     "6",
+		Search:     "",
 	}
 	err := CategoryProductRepository.StartTx(context.Background(), pgx.TxOptions{
 		IsoLevel:       pgx.ReadCommitted,
