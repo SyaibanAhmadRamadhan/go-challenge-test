@@ -8,7 +8,7 @@
    - email: admin@gmail.com
    - password: test123
 - TODO: FEATURE CHECKOUT
-- commit for release or deploy.
+- commit message for release or deploy.
   ```
       your commit msg any. release. 
       --tag_name: 0.0.0
