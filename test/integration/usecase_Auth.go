@@ -15,7 +15,7 @@ var device string
 
 func AuthUsecaseImplRegister(t *testing.T) {
 	register := &usecase.RegisterParam{
-		RoleID:      1,
+		RoleID:      2,
 		Username:    "rama",
 		Email:       "test@gmail.com",
 		Password:    "rama123",

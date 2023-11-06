@@ -17,7 +17,7 @@ func LoadEnv() {
 			// err = godotenv.Load(envFileOverride)
 			// helper.PanicIf(err)
 
-			log.Info().Msg("initialization .env and .env.override successfully")
+			log.Info().Msg("initialization .env successfully")
 			return
 		}
 	}

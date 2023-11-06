@@ -20,5 +20,5 @@ CREATE TABLE t_item_cart
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS t_cart;
+DROP TABLE IF EXISTS t_item_cart;
 -- +goose StatementEnd

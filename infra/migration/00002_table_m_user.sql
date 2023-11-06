@@ -18,7 +18,7 @@ CREATE TABLE m_user
 );
 INSERT INTO m_user (id, role_id, username, email, password, phone_number, created_at, created_by, updated_at,
                     updated_by, deleted_at, deleted_by)
-VALUES ('admin1', null, 'rama', 'ibanrama29@gmail.com', 'rama123', '088295007524', 123, 'admin1', 123, null, null, null)
+VALUES ('admin1', 2, 'rama', 'admin@gmail.com', '$2a$14$3ssf6RKXRE2kJfL/APIGA.JCaN6NhzNrMyekZJyq/GyUiDnILQ.Xy', '088295007524', 123, 'admin1', 123, null, null, null)
 -- +goose StatementEnd
 
 -- +goose Down

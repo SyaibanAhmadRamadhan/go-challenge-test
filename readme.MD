@@ -3,6 +3,10 @@
 ## Ecommerce documentation
 - Entity Relationship Digram (erd): https://app.diagrams.net/#G1MJin66fmBRSNOQWQ_QxVG_Fu1zFG89iX
 - Postman for documentation api: https://speeding-rocket-378837.postman.co/workspace/learning~fb963e59-3bd9-4dfb-9c7f-0d5fd0cbc002/collection/27426623-17d0c6c5-c483-4866-9f05-832da26c8784?action=share&creator=27426623
+- admin :
+   - email: admin@gmail.com
+   - password: test123
+- TODO: FEATURE CHECKOUT
 ## Explanation
 ### conf folder
 - The conf folder contains the load .env file folder, inside which there are several init envs, such as getenv for ```postgres``` or ```user admin```. This folder makes it easier for me when I want integration with vault or other things.
