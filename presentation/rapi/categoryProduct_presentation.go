@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/rs/zerolog/log"
 
+	"challenge-test-synapsis/helper"
 	"challenge-test-synapsis/presentation/rapi/exception"
 	"challenge-test-synapsis/presentation/rapi/schema"
 	"challenge-test-synapsis/usecase"
@@ -71,6 +71,15 @@ func (p *Presenter) UpdateCategoryProduct(c *fiber.Ctx) error {
 	}
 
 	id := c.Params("id")
+	_, err = helper.NewUlid(id)
+	if err != nil {
+		return exception.Err(c, &schema.ErrHttp{
+			Code:    fiber.StatusNotFound,
+			Message: "NOT FOUND",
+			Err:     "category product not found",
+		})
+	}
+
 	categoryProduct, err := p.CategoryProductUsecase.Update(c.Context(), id, &usecase.CategoryProductParam{
 		Name: req.Name,
 		CommonParam: usecase.CommonParam{
@@ -114,7 +123,16 @@ func (p *Presenter) UpdateCategoryProduct(c *fiber.Ctx) error {
 
 func (p *Presenter) DeleteCategoryProduct(c *fiber.Ctx) error {
 	id := c.Params("id")
-	err := p.CategoryProductUsecase.Delete(c.Context(), id, &usecase.CommonParam{
+	_, err := helper.NewUlid(id)
+	if err != nil {
+		return exception.Err(c, &schema.ErrHttp{
+			Code:    fiber.StatusNotFound,
+			Message: "NOT FOUND",
+			Err:     "category product not found",
+		})
+	}
+
+	err = p.CategoryProductUsecase.Delete(c.Context(), id, &usecase.CommonParam{
 		UserID: c.Locals("userID").(string),
 	})
 
@@ -160,7 +178,6 @@ func (p *Presenter) GetCategoryProduct(c *fiber.Ctx) error {
 		return exception.Err(c, err)
 	}
 
-	log.Info().Msgf("%v", categoryProducts)
 	var res []schema.CategoryProductResponse
 
 	for _, categoryProduct := range *categoryProducts {
@@ -172,7 +189,7 @@ func (p *Presenter) GetCategoryProduct(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(schema.Response{
 		Code:    200,
-		Message: "successfully deleted category product",
+		Message: "data category product",
 		Data:    res,
 		Err:     nil,
 		Paginate: &schema.PaginateRes{

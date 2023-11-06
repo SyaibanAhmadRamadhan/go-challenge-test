@@ -30,7 +30,7 @@ func (p *ProductRepositoryImpl) CheckOne(ctx context.Context, filters *[]reposit
 
 func (p *ProductRepositoryImpl) FindOne(ctx context.Context, filters *[]repository.Filter) (product *repository.Product, err error) {
 	filterStr, values, _ := repository.GenerateFilters(filters)
-	query := fmt.Sprintf("SELECT id, name, stock, price, description, %s FROM m_product %s", repository.AuditToQuery(""), filterStr)
+	query := fmt.Sprintf("SELECT id, category_product_id, name, stock, price, description, %s FROM m_product %s", repository.AuditToQuery(""), filterStr)
 
 	tx, err := p.GetTx()
 	if err != nil {
@@ -41,6 +41,7 @@ func (p *ProductRepositoryImpl) FindOne(ctx context.Context, filters *[]reposito
 
 	err = tx.QueryRow(ctx, query, values...).Scan(
 		&product.ID,
+		&product.CategoryProductID,
 		&product.Name,
 		&product.Stock,
 		&product.Price,
@@ -90,7 +91,7 @@ func (p *ProductRepositoryImpl) FindAllAndSearch(
 		return
 	}
 
-	query := fmt.Sprintf("SELECT id, name, stock, price, description, %s FROM m_product %s %s %s LIMIT $%d OFFSET $%d",
+	query := fmt.Sprintf("SELECT id, category_product_id, name, stock, price, description, %s FROM m_product %s %s %s LIMIT $%d OFFSET $%d",
 		repository.AuditToQuery(""), filterStr, search, orderStr, lastPH, lastPH+1)
 
 	values = append(values, param.Pagination.Limit)
@@ -107,6 +108,7 @@ func (p *ProductRepositoryImpl) FindAllAndSearch(
 	for rows.Next() {
 		err = rows.Scan(
 			&product.ID,
+			&product.CategoryProductID,
 			&product.Name,
 			&product.Stock,
 			&product.Price,

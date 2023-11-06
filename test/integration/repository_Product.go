@@ -13,52 +13,58 @@ import (
 )
 
 var product1 = &repository.Product{
-	ID:          "cp1",
-	Name:        "cp1",
-	Stock:       10,
-	Price:       123,
-	Description: "apa aja",
-	Audit:       auditDefault,
+	ID:                "cp1",
+	CategoryProductID: "cp1",
+	Name:              "cp1",
+	Stock:             10,
+	Price:             123,
+	Description:       "apa aja",
+	Audit:             auditDefault,
 }
 var product2 = &repository.Product{
-	ID:          "cp2",
-	Name:        "cp2",
-	Stock:       10,
-	Price:       123,
-	Description: "apa aja2",
-	Audit:       auditDefault,
+	ID:                "cp2",
+	CategoryProductID: "cp2",
+	Name:              "cp2",
+	Stock:             10,
+	Price:             123,
+	Description:       "apa aja2",
+	Audit:             auditDefault,
 }
 var product3 = &repository.Product{
-	ID:          "cp3",
-	Name:        "cp3",
-	Stock:       10,
-	Price:       123,
-	Description: "apa aja3",
-	Audit:       auditDefault,
+	ID:                "cp3",
+	CategoryProductID: "cp1",
+	Name:              "cp3",
+	Stock:             10,
+	Price:             123,
+	Description:       "apa aja3",
+	Audit:             auditDefault,
 }
 var product4 = &repository.Product{
-	ID:          "cp46",
-	Name:        "cp46",
-	Stock:       10,
-	Price:       123,
-	Description: "apa aja4",
-	Audit:       auditDefault,
+	ID:                "cp46",
+	CategoryProductID: "cp2",
+	Name:              "cp46",
+	Stock:             10,
+	Price:             123,
+	Description:       "apa aja4",
+	Audit:             auditDefault,
 }
 var product5 = &repository.Product{
-	ID:          "cp56",
-	Name:        "cp56",
-	Stock:       10,
-	Price:       123,
-	Description: "apa aja5",
-	Audit:       auditDefault,
+	ID:                "cp56",
+	CategoryProductID: "cp1",
+	Name:              "cp56",
+	Stock:             10,
+	Price:             123,
+	Description:       "apa aja5",
+	Audit:             auditDefault,
 }
 var product6 = &repository.Product{
-	ID:          "cp6",
-	Name:        "cp6",
-	Stock:       10,
-	Price:       123,
-	Description: "apa aja6",
-	Audit:       auditDefault,
+	ID:                "cp6",
+	CategoryProductID: "cp1",
+	Name:              "cp6",
+	Stock:             10,
+	Price:             123,
+	Description:       "apa aja6",
+	Audit:             auditDefault,
 }
 
 func ProductRepositoryImplCreate(t *testing.T) {
@@ -102,11 +108,12 @@ func ProductRepositoryImplCheckOne(t *testing.T) {
 
 func ProductRepositoryImplUpdate(t *testing.T) {
 	product1 = &repository.Product{
-		ID:          "cp1",
-		Name:        "baju keren",
-		Stock:       10,
-		Price:       1000000,
-		Description: "baju mahal",
+		ID:                "cp1",
+		CategoryProductID: "cp1",
+		Name:              "baju keren",
+		Stock:             10,
+		Price:             1000000,
+		Description:       "baju mahal",
 		Audit: repository.Audit{
 			UpdatedAt: time.Now().Unix(),
 			UpdatedBy: helper.NewNullString("user id"),

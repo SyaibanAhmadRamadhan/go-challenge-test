@@ -15,7 +15,7 @@ func (c *ProductUsecaseImpl) GetAndSearch(ctx context.Context, search string, pa
 		{
 			Column:   "category_product_id",
 			Value:    param.CategoryProductID,
-			Operator: repository.IsNULL,
+			Operator: repository.Equality,
 		},
 		{
 			Column:   "deleted_at",
@@ -58,10 +58,11 @@ func (c *ProductUsecaseImpl) GetAndSearch(ctx context.Context, search string, pa
 	for _, product := range *products {
 		*res = append(*res, usecase.ProductResult{
 			ID:                product.ID,
+			Stock:             product.Stock,
 			Name:              product.Name,
 			Price:             product.Price,
 			Description:       product.Description,
-			CategoryProductID: param.CategoryProductID,
+			CategoryProductID: product.CategoryProductID,
 		})
 	}
 	return

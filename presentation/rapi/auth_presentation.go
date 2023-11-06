@@ -48,7 +48,7 @@ func (p *Presenter) Login(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(schema.Response{
 		Code:    200,
-		Message: "data user",
+		Message: "login successfully",
 		Data: schema.ResponseAuth{
 			ID:          auth.ID,
 			RoleID:      auth.RoleID,
@@ -107,7 +107,7 @@ func (p *Presenter) Register(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(schema.Response{
 		Code:    200,
-		Message: "data user",
+		Message: "registration successfully",
 		Data: schema.ResponseAuth{
 			ID:          auth.ID,
 			RoleID:      auth.RoleID,

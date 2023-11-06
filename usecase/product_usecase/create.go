@@ -63,10 +63,12 @@ func (c *ProductUsecaseImpl) Create(ctx context.Context, param *usecase.ProductP
 		}
 
 		err = c.productRepo.Create(ctx, &repository.Product{
-			ID:          id,
-			Name:        param.Name,
-			Price:       param.Price,
-			Description: param.Description,
+			ID:                id,
+			CategoryProductID: param.CategoryProductID,
+			Name:              param.Name,
+			Stock:             param.Stock,
+			Price:             param.Price,
+			Description:       param.Description,
 			Audit: repository.Audit{
 				CreatedAt: time.Now().Unix(),
 				CreatedBy: param.UserID,
@@ -79,6 +81,7 @@ func (c *ProductUsecaseImpl) Create(ctx context.Context, param *usecase.ProductP
 
 	res = &usecase.ProductResult{
 		ID:                id,
+		Stock:             param.Stock,
 		Name:              param.Name,
 		Price:             param.Price,
 		Description:       param.Description,

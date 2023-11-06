@@ -10,8 +10,8 @@ import (
 )
 
 func (p *ProductRepositoryImpl) Create(ctx context.Context, product *repository.Product) (err error) {
-	query := `INSERT INTO m_product (id, name, stock, price, description, created_at, created_by, updated_at) 
-					VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+	query := `INSERT INTO m_product (id, category_product_id, name, stock, price, description, created_at, created_by, updated_at) 
+					VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
 	tx, err := p.GetTx()
 	if err != nil {
@@ -20,6 +20,7 @@ func (p *ProductRepositoryImpl) Create(ctx context.Context, product *repository.
 
 	_, err = tx.Exec(ctx, query,
 		product.ID,
+		product.CategoryProductID,
 		product.Name,
 		product.Stock,
 		product.Price,
@@ -37,7 +38,8 @@ func (p *ProductRepositoryImpl) Create(ctx context.Context, product *repository.
 }
 
 func (p *ProductRepositoryImpl) Update(ctx context.Context, product *repository.Product) (err error) {
-	query := `UPDATE m_product SET name=$1, stock=$2, price=$3, description=$4, updated_at=$5, updated_by=$6 WHERE id=$7 AND deleted_at IS NULL`
+	query := `UPDATE m_product SET category_product_id=$1, name=$2, stock=$3, price=$4, description=$5, updated_at=$6, updated_by=$7 
+                 WHERE id=$8 AND deleted_at IS NULL`
 
 	tx, err := p.GetTx()
 	if err != nil {
@@ -45,6 +47,7 @@ func (p *ProductRepositoryImpl) Update(ctx context.Context, product *repository.
 	}
 
 	res, err := tx.Exec(ctx, query,
+		product.CategoryProductID,
 		product.Name,
 		product.Stock,
 		product.Price,

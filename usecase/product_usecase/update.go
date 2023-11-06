@@ -19,6 +19,11 @@ func (c *ProductUsecaseImpl) Update(ctx context.Context, id string, param *useca
 			Operator: repository.Equality,
 		},
 		{
+			Column:   "category_product_id",
+			Value:    param.CategoryProductID,
+			Operator: repository.Equality,
+		},
+		{
 			Column:   "deleted_at",
 			Operator: repository.IsNULL,
 		},
@@ -66,10 +71,12 @@ func (c *ProductUsecaseImpl) Update(ctx context.Context, id string, param *useca
 		}
 
 		err = c.productRepo.Update(ctx, &repository.Product{
-			ID:          id,
-			Name:        param.Name,
-			Price:       param.Price,
-			Description: param.Description,
+			ID:                id,
+			CategoryProductID: param.CategoryProductID,
+			Name:              param.Name,
+			Stock:             param.Stock,
+			Price:             param.Price,
+			Description:       param.Description,
 			Audit: repository.Audit{
 				UpdatedAt: time.Now().Unix(),
 				UpdatedBy: helper.NewNullString(param.UserID),
@@ -81,6 +88,7 @@ func (c *ProductUsecaseImpl) Update(ctx context.Context, id string, param *useca
 
 	res = &usecase.ProductResult{
 		ID:                id,
+		Stock:             param.Stock,
 		Name:              param.Name,
 		Price:             param.Price,
 		Description:       param.Description,

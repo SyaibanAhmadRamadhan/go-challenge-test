@@ -28,6 +28,7 @@ func NewPresenter(config PresenterConfig) *fiber.App {
 	app.Post("/auth/login", CheckLogin, config.Presenter.Login)
 	app.Post("/auth/register", CheckLogin, config.Presenter.Register)
 	app.Get("/category-product", config.Presenter.GetCategoryProduct)
+	app.Get("/product", config.Presenter.GetProduct)
 
 	mustLogin := app.Group("", config.Presenter.Otorisasi)
 
@@ -35,6 +36,9 @@ func NewPresenter(config PresenterConfig) *fiber.App {
 	mustAdmin.Post("/category-product", config.Presenter.AddCategoryProduct)
 	mustAdmin.Put("/category-product/:id", config.Presenter.UpdateCategoryProduct)
 	mustAdmin.Delete("/category-product/:id", config.Presenter.DeleteCategoryProduct)
+	mustAdmin.Post("/product", config.Presenter.AddProduct)
+	mustAdmin.Put("/product/:id", config.Presenter.UpdateProduct)
+	mustAdmin.Delete("/product/:id", config.Presenter.DeleteProduct)
 
 	return app
 }

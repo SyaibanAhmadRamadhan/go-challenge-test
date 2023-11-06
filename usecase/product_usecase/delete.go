@@ -9,7 +9,7 @@ import (
 	"challenge-test-synapsis/usecase"
 )
 
-func (c *ProductUsecaseImpl) Delete(ctx context.Context, id string, param *usecase.CommonParam) (res *usecase.ProductResult, err error) {
+func (c *ProductUsecaseImpl) Delete(ctx context.Context, id string, param *usecase.CommonParam) (err error) {
 	filters := &[]repository.Filter{
 		{
 			Column:   "id",
