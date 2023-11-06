@@ -20,6 +20,6 @@ type ProductRepository interface {
 	Delete(ctx context.Context, id string, userID string) (err error)
 	CheckOne(ctx context.Context, filters *[]Filter) (b bool, err error)
 	FindOne(ctx context.Context, filters *[]Filter) (product *Product, err error)
-	FindAllAndSearch(ctx context.Context, param FindAllAndSearchParam) (products *[]Product, total int, err error)
+	FindAllAndSearch(ctx context.Context, param FPSParam) (products *[]Product, total int, err error)
 	UOWRepository
 }

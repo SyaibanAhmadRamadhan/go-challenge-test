@@ -22,6 +22,18 @@ func (c *CategoryProductUsecaseImpl) Delete(ctx context.Context, id string, para
 		},
 	}
 
+	filtersProduct := &[]repository.Filter{
+		{
+			Column:   "category_product_id",
+			Value:    id,
+			Operator: repository.Equality,
+		},
+		{
+			Column:   "deleted_at",
+			Operator: repository.IsNULL,
+		},
+	}
+
 	err = c.categoryProductRepo.StartTx(ctx, pgx.TxOptions{
 		IsoLevel:   pgx.ReadCommitted,
 		AccessMode: pgx.ReadWrite,
@@ -32,6 +44,14 @@ func (c *CategoryProductUsecaseImpl) Delete(ctx context.Context, id string, para
 		}
 		if !exist {
 			return usecase.ErrCategoryProductNotFound
+		}
+
+		exist, err = c.productRepo.CheckOne(ctx, filtersProduct)
+		if err != nil {
+			return err
+		}
+		if exist {
+			return usecase.ErrCategoryProductHaveProduct
 		}
 
 		err = c.categoryProductRepo.Delete(ctx, id, param.UserID)

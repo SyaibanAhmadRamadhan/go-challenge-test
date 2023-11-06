@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE t_cart
+CREATE TABLE t_item_cart
 (
     id              SERIAL primary key,
     cart_id         INT,

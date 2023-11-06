@@ -175,7 +175,7 @@ func CategoryProductRepositoryImplFindAll(t *testing.T) {
 		PrefixOrder: "",
 	}
 
-	findAllAndSearch := repository.FindAllAndSearchParam{
+	findAllAndSearch := repository.FPSParam{
 		Filters:    &filters,
 		Pagination: paginate,
 		Search:     "",

@@ -11,6 +11,7 @@ import (
 	"challenge-test-synapsis/helper"
 	"challenge-test-synapsis/infra"
 	"challenge-test-synapsis/presentation/rapi"
+	"challenge-test-synapsis/repository/cart_repository"
 	"challenge-test-synapsis/repository/categoryProduct_repository"
 	"challenge-test-synapsis/repository/product_repository"
 	"challenge-test-synapsis/repository/redis_repository"
@@ -18,6 +19,7 @@ import (
 	"challenge-test-synapsis/repository/uow_repository"
 	"challenge-test-synapsis/repository/user_repository"
 	"challenge-test-synapsis/usecase/auth_usecase"
+	"challenge-test-synapsis/usecase/cart_usecase"
 	"challenge-test-synapsis/usecase/categoryProduct_usecase"
 	"challenge-test-synapsis/usecase/product_usecase"
 )
@@ -55,14 +57,18 @@ func main() {
 	sessionRepo := session_repository.NewSessionRepositoryImpl(uow)
 	categoryProductRepo := categoryProduct_repository.NewCategoryProductRepositoryImpl(uow)
 	productRepo := product_repository.NewProductRepositoryImpl(uow)
+	cartRepo := cart_repository.NewCartRepositoryImpl(uow)
 
 	authUsecase := auth_usecase.NewAuthUsecaseImpl(userRepo, sessionRepo, redisRepo)
-	categoryProductUsecase := categoryProduct_usecase.NewCategoryProductUsecaseImpl(categoryProductRepo)
+	categoryProductUsecase := categoryProduct_usecase.NewCategoryProductUsecaseImpl(categoryProductRepo, productRepo)
 	productUsecase := product_usecase.NewProductUsecaseImpl(productRepo, categoryProductRepo)
+	cartUsecase := cart_usecase.NewCartUsecaseImpl(cartRepo, productRepo)
+
 	presenter := rapi.Presenter{
 		AuthUsecase:            authUsecase,
 		CategoryProductUsecase: categoryProductUsecase,
 		ProductUsecase:         productUsecase,
+		CartUsecase:            cartUsecase,
 	}
 	presenterConfig := rapi.PresenterConfig{
 		WebConf:   conf.EnvWebConf(),

@@ -32,7 +32,8 @@ type Pagination struct {
 	PrefixOrder string            // check unit test for detail. TestPagination_OrderBy
 }
 
-type FindAllAndSearchParam struct {
+// FPSParam FPS is filters, pagination, search
+type FPSParam struct {
 	Filters    *[]Filter
 	Pagination Pagination
 	Search     string
@@ -66,10 +67,17 @@ func GenerateFilters(filters *[]Filter) (str string, values []any, lastPlaceHold
 	if filters != nil {
 		str += "WHERE "
 		latest := (*filters)[len(*filters)-1]
-		for i, filter := range *filters {
+		i := 1
+		for _, filter := range *filters {
 			if filter.Operator == IsNULL || filter.Operator == IsNotNULL {
 				str += fmt.Sprintf("%s%s %s",
 					filter.Prefix, filter.Column, filter.Operator)
+				if filter != latest {
+					if filter.NextConditionColumn == "" {
+						filter.NextConditionColumn = AND
+					}
+					str += fmt.Sprintf(" %s ", filter.NextConditionColumn)
+				}
 			} else {
 				if filter.Value != "" {
 					if filter.Operator == "" {
@@ -77,15 +85,16 @@ func GenerateFilters(filters *[]Filter) (str string, values []any, lastPlaceHold
 					}
 					values = append(values, filter.Value)
 					str += fmt.Sprintf("%s%s %s $%d",
-						filter.Prefix, filter.Column, filter.Operator, i+1)
+						filter.Prefix, filter.Column, filter.Operator, i)
 
+					lastPlaceHolder += i
+					i++
 					if filter != latest {
 						if filter.NextConditionColumn == "" {
 							filter.NextConditionColumn = AND
 						}
 						str += fmt.Sprintf(" %s ", filter.NextConditionColumn)
 					}
-					lastPlaceHolder += i + 1
 				}
 			}
 

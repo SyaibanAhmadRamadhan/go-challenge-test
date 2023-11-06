@@ -23,6 +23,6 @@ type CategoryProductRepository interface {
 	Delete(ctx context.Context, id string, userID string) (err error)
 	CheckOne(ctx context.Context, filters *[]Filter) (b bool, err error)
 	FindOne(ctx context.Context, filters *[]Filter) (categoryProduct *CategoryProduct, err error)
-	FindAllAndSearch(ctx context.Context, param FindAllAndSearchParam) (categoryProducts *[]CategoryProduct, total int, err error)
+	FindAllAndSearch(ctx context.Context, param FPSParam) (categoryProducts *[]CategoryProduct, total int, err error)
 	UOWRepository
 }

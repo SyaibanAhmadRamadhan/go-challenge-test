@@ -25,7 +25,7 @@ func (c *ProductUsecaseImpl) GetAndSearch(ctx context.Context, search string, pa
 
 	var products *[]repository.Product
 
-	findAllAndSearch := repository.FindAllAndSearchParam{
+	findAllAndSearch := repository.FPSParam{
 		Filters: filters,
 		Pagination: repository.Pagination{
 			Limit:  param.PageSize,

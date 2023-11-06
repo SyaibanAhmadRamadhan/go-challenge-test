@@ -4,7 +4,6 @@ CREATE TABLE m_cart
 (
     id          SERIAL primary key,
     user_id     VARCHAR(50),
-    total_price DECIMAL,
     created_at  DECIMAL,
     created_by  VARCHAR(50),
     updated_at  DECIMAL,

@@ -62,7 +62,7 @@ func (c *CategoryProductRepositoryImpl) FindOne(ctx context.Context, filters *[]
 }
 
 func (c *CategoryProductRepositoryImpl) FindAllAndSearch(
-	ctx context.Context, param repository.FindAllAndSearchParam,
+	ctx context.Context, param repository.FPSParam,
 ) (categoryProducts *[]repository.CategoryProduct, total int, err error) {
 	filterStr, values, lastPH := repository.GenerateFilters(param.Filters)
 	orderStr := param.Pagination.GenerateOrderBy()

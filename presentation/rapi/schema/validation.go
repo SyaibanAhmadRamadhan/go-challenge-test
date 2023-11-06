@@ -27,7 +27,7 @@ func MaxMinInt(i, min, max int) string {
 	switch {
 	case i < min:
 		return fmt.Sprintf(MinInt, min)
-	case max > max:
+	case i > max:
 		return fmt.Sprintf(MaxInt, max)
 	}
 

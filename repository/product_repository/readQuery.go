@@ -14,7 +14,7 @@ import (
 func (p *ProductRepositoryImpl) CheckOne(ctx context.Context, filters *[]repository.Filter) (b bool, err error) {
 	filterStr, values, _ := repository.GenerateFilters(filters)
 	query := fmt.Sprintf(`SELECT EXISTS (SELECT 1 FROM m_product %s)`, filterStr)
-
+	log.Info().Msgf(query)
 	tx, err := p.GetTx()
 	if err != nil {
 		return
@@ -65,7 +65,7 @@ func (p *ProductRepositoryImpl) FindOne(ctx context.Context, filters *[]reposito
 }
 
 func (p *ProductRepositoryImpl) FindAllAndSearch(
-	ctx context.Context, param repository.FindAllAndSearchParam,
+	ctx context.Context, param repository.FPSParam,
 ) (products *[]repository.Product, total int, err error) {
 	filterStr, values, lastPH := repository.GenerateFilters(param.Filters)
 	orderStr := param.Pagination.GenerateOrderBy()

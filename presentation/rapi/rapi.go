@@ -14,6 +14,7 @@ type Presenter struct {
 	AuthUsecase            usecase.AuthUsecase
 	CategoryProductUsecase usecase.CategoryProductUsecase
 	ProductUsecase         usecase.ProductUsecase
+	CartUsecase            usecase.CartUsecase
 }
 
 type PresenterConfig struct {
@@ -31,6 +32,10 @@ func NewPresenter(config PresenterConfig) *fiber.App {
 	app.Get("/product", config.Presenter.GetProduct)
 
 	mustLogin := app.Group("", config.Presenter.Otorisasi)
+	app.Get("/cart", config.Presenter.GetProductCart)
+	app.Post("/cart", config.Presenter.AddProductCart)
+	app.Put("/cart/:id", config.Presenter.UpdateProductCart)
+	app.Delete("/cart/:id", config.Presenter.DeleteProductCart)
 
 	mustAdmin := mustLogin.Group("", MustBeAdmin)
 	mustAdmin.Post("/category-product", config.Presenter.AddCategoryProduct)

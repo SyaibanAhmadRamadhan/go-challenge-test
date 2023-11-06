@@ -6,14 +6,13 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"challenge-test-synapsis/helper"
 	"challenge-test-synapsis/presentation/rapi/exception"
 	"challenge-test-synapsis/presentation/rapi/schema"
 	"challenge-test-synapsis/usecase"
 )
 
-func (p *Presenter) AddCategoryProduct(c *fiber.Ctx) error {
-	req := new(schema.CategoryProductRequest)
+func (p *Presenter) AddProductCart(c *fiber.Ctx) error {
+	req := new(schema.CartRequest)
 
 	if err := c.BodyParser(req); err != nil {
 		return exception.Err(c, err)
@@ -24,42 +23,39 @@ func (p *Presenter) AddCategoryProduct(c *fiber.Ctx) error {
 		return exception.Err(c, err)
 	}
 
-	categoryProduct, err := p.CategoryProductUsecase.Create(c.Context(), &usecase.CategoryProductParam{
-		Name: req.Name,
+	cart, err := p.CartUsecase.AddItemCart(c.Context(), &usecase.ItemCartParam{
+		ProductID: req.ProductID,
+		Total:     req.Total,
 		CommonParam: usecase.CommonParam{
 			UserID: c.Locals("userID").(string),
 		},
 	})
 
 	if err != nil {
-		if errors.Is(err, usecase.ErrCategoryProductNameIsExist) {
+		if errors.Is(err, usecase.ErrProductNotFound) {
 			err = &schema.ErrHttp{
 				Code:    fiber.StatusBadRequest,
 				Message: "BAD REQUEST",
 				Err: map[string][]string{
-					"name": {
+					"product_id": {
 						err.Error(),
 					},
 				},
 			}
 		}
-
 		return exception.Err(c, err)
 	}
 
 	return c.Status(200).JSON(schema.Response{
 		Code:    200,
-		Message: "successfully created category product",
-		Data: schema.CategoryProductResponse{
-			ID:   categoryProduct.ID,
-			Name: categoryProduct.Name,
-		},
-		Err: nil,
+		Message: "created list cart successfully",
+		Data:    cart,
+		Err:     nil,
 	})
 }
 
-func (p *Presenter) UpdateCategoryProduct(c *fiber.Ctx) error {
-	req := new(schema.CategoryProductRequest)
+func (p *Presenter) UpdateProductCart(c *fiber.Ctx) error {
+	req := new(schema.CartRequestUpdate)
 
 	if err := c.BodyParser(req); err != nil {
 		return exception.Err(c, err)
@@ -71,99 +67,96 @@ func (p *Presenter) UpdateCategoryProduct(c *fiber.Ctx) error {
 	}
 
 	id := c.Params("id")
-	_, err = helper.NewUlid(id)
+	// _, err = helper.NewUlid(id)
+	idInt, err := strconv.Atoi(id)
 	if err != nil {
 		return exception.Err(c, &schema.ErrHttp{
 			Code:    fiber.StatusNotFound,
 			Message: "NOT FOUND",
-			Err:     "category product not found",
+			Err:     "cart not found",
 		})
 	}
 
-	categoryProduct, err := p.CategoryProductUsecase.Update(c.Context(), id, &usecase.CategoryProductParam{
-		Name: req.Name,
+	cart, err := p.CartUsecase.UpdateItemCart(c.Context(), int64(idInt), &usecase.ItemCartParam{
+		Total: req.Total,
 		CommonParam: usecase.CommonParam{
 			UserID: c.Locals("userID").(string),
 		},
 	})
 
 	if err != nil {
-		if errors.Is(err, usecase.ErrCategoryProductNameIsExist) {
+		if errors.Is(err, usecase.ErrProductNotFound) {
 			err = &schema.ErrHttp{
 				Code:    fiber.StatusBadRequest,
-				Message: "BAD REQUEST",
-				Err: map[string][]string{
-					"name": {
-						err.Error(),
-					},
-				},
+				Message: "not found",
+				Err:     "your item cart product not found",
 			}
 		}
-		if errors.Is(err, usecase.ErrCategoryProductNotFound) {
+		if errors.Is(err, usecase.ErrItemCartNotFound) {
 			err = &schema.ErrHttp{
-				Code:    fiber.StatusNotFound,
-				Message: "NOT FOUND",
+				Code:    fiber.StatusBadRequest,
+				Message: "not found",
 				Err:     err.Error(),
 			}
 		}
-
 		return exception.Err(c, err)
 	}
 
 	return c.Status(200).JSON(schema.Response{
 		Code:    200,
-		Message: "successfully updated category product",
-		Data: schema.CategoryProductResponse{
-			ID:   categoryProduct.ID,
-			Name: categoryProduct.Name,
-		},
-		Err: nil,
+		Message: "updated list cart successfully",
+		Data:    cart,
+		Err:     nil,
 	})
 }
 
-func (p *Presenter) DeleteCategoryProduct(c *fiber.Ctx) error {
+func (p *Presenter) DeleteProductCart(c *fiber.Ctx) error {
 	id := c.Params("id")
-	_, err := helper.NewUlid(id)
+	// _, err = helper.NewUlid(id)
+	idInt, err := strconv.Atoi(id)
 	if err != nil {
 		return exception.Err(c, &schema.ErrHttp{
 			Code:    fiber.StatusNotFound,
 			Message: "NOT FOUND",
-			Err:     "category product not found",
+			Err:     "item cart not found",
 		})
 	}
 
-	err = p.CategoryProductUsecase.Delete(c.Context(), id, &usecase.CommonParam{
+	err = p.CartUsecase.DeleteItemCart(c.Context(), int64(idInt), &usecase.CommonParam{
 		UserID: c.Locals("userID").(string),
 	})
 
 	if err != nil {
-		if errors.Is(err, usecase.ErrCategoryProductNotFound) {
-			err = &schema.ErrHttp{
-				Code:    fiber.StatusNotFound,
-				Message: "NOT FOUND",
-				Err:     err.Error(),
-			}
-		}
-		if errors.Is(err, usecase.ErrCategoryProductHaveProduct) {
+		if errors.Is(err, usecase.ErrProductNotFound) {
 			err = &schema.ErrHttp{
 				Code:    fiber.StatusBadRequest,
 				Message: "BAD REQUEST",
+				Err: map[string][]string{
+					"product_id": {
+						err.Error(),
+					},
+				},
+			}
+		}
+		if errors.Is(err, usecase.ErrItemCartNotFound) {
+			err = &schema.ErrHttp{
+				Code:    fiber.StatusBadRequest,
+				Message: "not found",
 				Err:     err.Error(),
 			}
 		}
-
 		return exception.Err(c, err)
 	}
 
 	return c.Status(200).JSON(schema.Response{
 		Code:    200,
-		Message: "successfully deleted category product",
+		Message: "deleted list cart successfully",
 		Data:    nil,
 		Err:     nil,
 	})
 }
 
-func (p *Presenter) GetCategoryProduct(c *fiber.Ctx) error {
+func (p *Presenter) GetProductCart(c *fiber.Ctx) error {
 	search := c.Query("search")
 	page := c.Query("page")
 	pageSize := c.Query("page-size")
@@ -176,28 +169,43 @@ func (p *Presenter) GetCategoryProduct(c *fiber.Ctx) error {
 		pageSizeInt = 10
 	}
 
-	categoryProducts, paginate, err := p.CategoryProductUsecase.GetAndSearch(c.Context(), search, &usecase.PaginateParam{
-		Page:     pageInt,
-		PageSize: pageSizeInt,
+	carts, paginate, err := p.CartUsecase.GetItemCartByCart(c.Context(), &usecase.GetCartParam{
+		Search: search,
+		PaginateParam: usecase.PaginateParam{
+			Page:     pageInt,
+			PageSize: pageSizeInt,
+		},
+		CommonParam: usecase.CommonParam{
+			UserID: c.Locals("userID").(string),
+		},
 	})
 
 	if err != nil {
+		if errors.Is(err, usecase.ErrProductNotFound) {
+			err = &schema.ErrHttp{
+				Code:    fiber.StatusBadRequest,
+				Message: "BAD REQUEST",
+				Err: map[string][]string{
+					"product_id": {
+						err.Error(),
+					},
+				},
+			}
+		}
+		if errors.Is(err, usecase.ErrItemCartNotFound) {
+			err = &schema.ErrHttp{
+				Code:    fiber.StatusBadRequest,
+				Message: "not found",
+				Err:     err.Error(),
+			}
+		}
 		return exception.Err(c, err)
-	}
-
-	var res []schema.CategoryProductResponse
-
-	for _, categoryProduct := range *categoryProducts {
-		res = append(res, schema.CategoryProductResponse{
-			ID:   categoryProduct.ID,
-			Name: categoryProduct.Name,
-		})
 	}
 
 	return c.Status(200).JSON(schema.Response{
 		Code:    200,
-		Message: "data category product",
-		Data:    res,
+		Message: "data carts",
+		Data:    carts,
 		Err:     nil,
 		Paginate: &schema.PaginateRes{
 			CurrentPage: paginate.CurrentPage,

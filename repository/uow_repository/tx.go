@@ -17,12 +17,17 @@ func (u *UnitOfWorkRepositoryImpl) StartTx(ctx context.Context, opts pgx.TxOptio
 		return err
 	}
 
-	tx, err := u.db.BeginTx(ctx, opts)
+	var tx pgx.Tx
+	var err error
+
+	// if u.tx == nil {
+	tx, err = u.db.BeginTx(ctx, opts)
 	if err != nil {
 		log.Warn().Msgf("failed start begin tx | err : %v", err)
 		return err
 	}
 	u.tx = tx
+	// }
 
 	err = fn()
 	if err != nil {
@@ -36,7 +41,7 @@ func (u *UnitOfWorkRepositoryImpl) StartTx(ctx context.Context, opts pgx.TxOptio
 	}
 
 	if errCommit := tx.Commit(ctx); errCommit != nil {
-		log.Warn().Msgf("failed commit data | %err : %v", errCommit)
+		log.Warn().Msgf("failed commit data | err : %v", errCommit)
 		return errCommit
 	}
 

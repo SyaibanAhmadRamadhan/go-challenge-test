@@ -14,12 +14,12 @@ type ProductParam struct {
 }
 
 type ProductResult struct {
-	ID                string
-	Name              string
-	Price             int
-	Stock             int
-	Description       string
-	CategoryProductID string
+	ID                string `json:"id"`
+	Name              string `json:"name"`
+	Price             int    `json:"price"`
+	Stock             int    `json:"stock"`
+	Description       string `json:"description"`
+	CategoryProductID string `json:"category_product_id"`
 }
 
 type GetProductParam struct {
