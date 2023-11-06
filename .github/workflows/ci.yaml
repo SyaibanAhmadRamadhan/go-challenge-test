@@ -1,4 +1,4 @@
-name: Continouos Integration/Continouos Deployment
+name: Continuous Integration
 on:
   push:
     branches:
@@ -26,11 +26,3 @@ jobs:
 
       - name: run unit test
         run: make unit-test
-  cd:
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: deploy
-        run: echo "deploying"
