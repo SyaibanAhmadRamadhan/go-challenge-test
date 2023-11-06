@@ -29,35 +29,35 @@
   ``` 
   - base url http://127.0.0.1:8080
   - check on postman for detail endpoint [Postman Collection](https://speeding-rocket-378837.postman.co/workspace/learning~fb963e59-3bd9-4dfb-9c7f-0d5fd0cbc002/collection/27426623-17d0c6c5-c483-4866-9f05-832da26c8784?action=share&creator=27426623)
-    - for custom environment app main.go
-      - open docker-compose.yaml, in environment service app edit as needed
-      - list of existing environments
-      ```
-      APPLICATION_PORT=8080
+  - for custom environment app main.go
+    - open docker-compose.yaml, in environment service app edit as needed
+    - list of existing environments
+    ```
+    APPLICATION_PORT=8080
 
-      POSTGRES_USER=root
-      POSTGRES_PASSWORD=root
-      POSTGRES_HOST=127.0.0.1
-      POSTGRES_PORT=5432
-      POSTGRES_DB=ecommerce_db
-      POSTGRES_SSL=disable
+    POSTGRES_USER=root
+    POSTGRES_PASSWORD=root
+    POSTGRES_HOST=127.0.0.1
+    POSTGRES_PORT=5432
+    POSTGRES_DB=ecommerce_db
+    POSTGRES_SSL=disable
     
-      REDIS_HOST=127.0.0.1
-      REDIS_PORT=6379
-      REDIS_DB=0
-      REDIS_PASS=root
+    REDIS_HOST=127.0.0.1
+    REDIS_PORT=6379
+    REDIS_DB=0
+    REDIS_PASS=root
     
-      ADMIN_EMAILS=admin@gmail.com
+    ADMIN_EMAILS=admin@gmail.com
     
-      AUTH_JWT_TOKEN_HS_ACCESS_TOKEN_KEY="this is a secret hs key, it is recommended to use a random string"
-      AUTH_JWT_TOKEN_HS_ACCESS_TOKEN_EXPIRED="20m"
+    AUTH_JWT_TOKEN_HS_ACCESS_TOKEN_KEY="this is a secret hs key, it is recommended to use a random string"
+    AUTH_JWT_TOKEN_HS_ACCESS_TOKEN_EXPIRED="20m"
     
-      AUTH_JWT_TOKEN_HS_REFRESH_TOKEN_KEY="this is a secret hs key, it is recommended to use a random string"
-      AUTH_JWT_TOKEN_HS_REFRESH_TOKEN_EXPIRED="60m"
+    AUTH_JWT_TOKEN_HS_REFRESH_TOKEN_KEY="this is a secret hs key, it is recommended to use a random string"
+    AUTH_JWT_TOKEN_HS_REFRESH_TOKEN_EXPIRED="60m"
     
-      AUTH_JWT_TOKEN_REMEMBER_ME_EXPIRED="120m"
-      ```
-      - if you want to add an admin then add the prefix ```,``` example ```admin@gmail.com,admin2@gmail.com```
+    AUTH_JWT_TOKEN_REMEMBER_ME_EXPIRED="120m"
+    ```
+    - if you want to add an admin then add the prefix ```,``` example ```admin@gmail.com,admin2@gmail.com```
 ## Explanation
 ### conf folder
 - The conf folder contains the load .env file folder, inside which there are several init envs, such as getenv for ```postgres``` or ```user admin```. This folder makes it easier for me when I want integration with vault or other things.
