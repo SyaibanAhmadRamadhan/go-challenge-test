@@ -34,7 +34,13 @@ func main() {
 	conf.LoadEnv()
 
 	if args[1] == "migrate" {
-		infra.MigrateMaster("", "", "")
+		if len(args) == 3 {
+			infra.MigrateMaster(args[2], "", "")
+		} else if len(args) == 4 {
+			infra.MigrateMaster(args[2], args[3], "")
+		} else {
+			infra.MigrateMaster("", "", "")
+		}
 		return
 	}
 

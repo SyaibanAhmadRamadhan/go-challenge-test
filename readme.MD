@@ -7,6 +7,18 @@
    - email: admin@gmail.com
    - password: test123
 - TODO: FEATURE CHECKOUT
+- commit for release or deploy.
+  ```
+      your commit msg any. release. 
+      --tag_name: 0.0.0
+      --release_name: test release
+      --body: |
+        test releas.
+          - new feature 1
+          - new feature 2
+      --draft: false
+      --prerelease: false
+    ```
 ## Explanation
 ### conf folder
 - The conf folder contains the load .env file folder, inside which there are several init envs, such as getenv for ```postgres``` or ```user admin```. This folder makes it easier for me when I want integration with vault or other things.

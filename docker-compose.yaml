@@ -1,6 +1,20 @@
 version: '3'
 
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - redis
+      - postgres-master
+    # for custom environment check file .env in https://github.com/SyaibanAhmadRamadhan/go-challenge-test/blob/main/.env
+    environment:
+      POSTGRES_HOST: postgres-master
+      REDIS_HOST: redis
+
   postgres-master:
     image: postgres:latest
     environment:
@@ -11,6 +25,7 @@ services:
       - postgres-master-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+      -
   redis:
     image: redis:6.2-alpine
     ports:

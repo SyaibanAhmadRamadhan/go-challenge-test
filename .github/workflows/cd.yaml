@@ -10,5 +10,26 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      - name: deploy
-        run: echo "deploying"
+
+      - name: setup-go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.21"
+
+      - name: Log in to Docker Hub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Get Tag Release
+        run: |
+          DOCKER_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)
+          echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
+
+      - name: Tag Docker image
+        run: |
+          docker build -t ibanrama29/go-challenge-test:latest .
+          docker tag ibanrama29/go-challenge-test:latest ibanrama29/go-challenge-test:$DOCKER_TAG
+
+      - name: Push Docker image
+        run: |
+          docker push ibanrama29/go-challenge-test:$DOCKER_TAG
